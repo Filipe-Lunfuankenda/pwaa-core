@@ -45,4 +45,116 @@ Para que a sua implementação seja 100% compatível com a norma PWAA, deve asse
 
 Seguindo estes 3 passos, **qualquer software ou firmware no mundo** pode tornar-se num leitor nativo do formato `.pwaa`!
 
+
+## 📥 Guia de Instalação e Execução do PWAA Reader
+
+O ecossistema PWAA foi desenhado com foco absoluto na portabilidade. O formato `.pwaa` pode ser reproduzido nativamente em qualquer sistema operativo, sem necessitar de instalar servidores web pesados ou configurar ambientes de desenvolvimento.
+
+## 1. Onde Descarregar (Releases)
+
+Acede à nossa página oficial de **Releases** no GitHub para obteres os binários mais recentes, compilados e otimizados:
+👉 **[Descarregar Última Release do PWAA Core](https://github.com/Filipe-Lunfuankenda/pwaa-core/releases)**
+
+Dentro do pacote `.zip` da release, encontrarás as seguintes ferramentas prontas a usar (Zero Instalação):
+*   🖥️ **Desktop:** `pwaareader-windows.exe`, `pwaareader-mac` (Intel/Apple Silicon) e `pwaareader-linux`.
+*   📱 **Mobile SDK:** Binários de biblioteca `pwaa-mobile-sdk.aar` (Android) e `pwaa-sdk.xcframework` (iOS).
+
+---
+
+## 2. Como Executar (Desktop)
+
+O `pwaareader` é um executável autónomo (Standalone). Não necessita de instalação, basta abrir o terminal na pasta onde o descarregaste e passar-lhe o ficheiro `.pwaa` que desejas ler.
+
+### 🪟 Windows
+
+No Windows, podes simplesmente arrastar o ficheiro `.pwaa` para cima do executável, ou usar a linha de comandos:
+```powershell
+# Reproduzir um ficheiro PWAA
+.\pwaareader-windows.exe o_meu_projeto.pwaa
+
+# Modo Silencioso (Headless - apenas inicia o servidor e devolve o URL interno)
+.\pwaareader-windows.exe o_meu_projeto.pwaa --headless
+```
+
+O terminal do Windows (PowerShell) tem uma medida de segurança muito chata: ele recusa-se a correr executáveis apenas pelo nome se eles não estiverem instalados nas entranhas do sistema (ao contrário dos comandos normais como `cd` ou `git`).
+
+Para dizeres ao Windows *"Quero correr o programa que está exatamente aqui na minha frente"*, tens obrigatoriamente de colocar um ponto e uma barra (**`.\`**) antes do nome!
+
+Aqui tens a tua "Cábula" definitiva com os comandos exatos que deves usar na raiz do teu projeto. Copia e cola-os para ver a magia a acontecer (supondo que os executáveis todos estão na pasta sdk):
+
+#### A. Para abrir/ler um ficheiro PWAA
+Se tiveres um ficheiro chamado `projeto.pwaa` na tua pasta, abres o Leitor assim:
+```powershell
+.\sdk\pwaareader.exe projeto.pwaa
+```
+
+#### B. Converter uma pasta Web simples (Modo Pack)
+Pega numa pasta onde programaste HTML/CSS puro (por exemplo a pasta `sites/nanovisio`) e empacota-a de forma instantânea:
+```powershell
+.\sdk\pwaa-builder.exe pack .\sites\nanovisio -o nanovisio.pwaa
+```
+
+#### C. Converter um projeto complexo (Modo Build - React/Vue/Node)
+Se estiveres numa pasta com ficheiros cruéis cheios de dependências (`package.json`), o builder instala tudo, compila para código limpo de produção e arquiva:
+```powershell
+.\sdk\pwaa-builder.exe build .\A_TUA_PASTA_REACT -o app-moderna.pwaa
+```
+
+#### D. Clonar um Site da Internet (Modo Scrape)
+Para sacares todo um site que está na nuvem e imortalizá-lo offline num formato `.pwaa`:
+```powershell
+.\sdk\pwaa-builder.exe scrape https://exemplo.com -o copia-online.pwaa
+```
+
+
+### 🐧 Linux
+
+No Linux, tens de garantir que o ficheiro tem permissões de execução antes de o correres pela primeira vez.
+
+# Dar permissão de execução
+chmod +x pwaareader-linux
+
+# Reproduzir o ficheiro PWAA
+./pwaareader-linux o_meu_projeto.pwaa
+
+# Modo Silencioso (Headless)
+./pwaareader-linux o_meu_projeto.pwaa --headless
+
+
+### 🍏 MacOS
+
+Tal como no Linux, atribui permissão de execução e executa via terminal. O sistema Mac baseia-se no seu motor Cocoa de alta performance nativa.
+
+3. Como Integrar (Mobile SDK - Android e iOS)
+
+Diferente da versão Desktop que é um programa executável, a versão Mobile é fornecida sob a forma de uma *Biblioteca Nativa (SDK)* para integrares nas tuas próprias aplicações móveis.
+
+🤖 Android (Java/Kotlin)
+
+Dentro da Release, descarrega o ficheiro `pwaa-mobile-sdk.aar` e adiciona-o à pasta `app/libs` do teu projeto Android Studio.
+
+// Importar a classe gerada pelo SDK GoMobile
+import pwaa.mobile.sdk.Sdk
+
+// Inicializar e arrancar o Servidor Interno PWAA
+val engineStatus = Sdk.initSDK()
+val fileInfo = Sdk.readFile("/caminho/absoluto/no/telemovel/app.pwaa")
+
+// Posteriormente, podes carregar o localhost interno numa WebView Android
+
+
+🍎 iOS (Swift/Objective-C)
+
+Descarrega a framework `pwaa-sdk.xcframework` da Release e arrasta-a para o teu projeto no Xcode (garante que está marcada como *Embed & Sign*).
+
+// Importar o módulo
+import Pwaa_mobile_sdk
+
+// Iniciar a máquina PWAA e ler um ficheiro local do dispositivo
+let status = Pwaa_mobile_sdkInitSDK()
+let readerData = Pwaa_mobile_sdkReadFile("/caminho/no/ios/app.pwaa")
+
+// Usar uma WKWebView para apresentar o conteúdo local servido pela framework
+
+
 *(PWAA Padrão Oficial - Construído para a era Offline)*
