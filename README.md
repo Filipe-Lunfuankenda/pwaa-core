@@ -76,6 +76,8 @@ A ferramenta de clonagem embutida (`pwaa-builder scrape`) foi criada com o prop�
 
 👉 [**Lê o Guia de Instalação e Comandos Completos na Documentação do SDK**](https://github.com/Filipe-Lunfuankenda/pwaa-core/blob/main/sdk/SDK_README.md)
 
+👉 [**Veja também a Documentação Oficial Sintetizada do Formato PWAA**](https://github.com/Filipe-Lunfuankenda/pwaa-core/blob/main/PWAA_DOCUMENTATION.md)
+
 ---
 
 ### 🇬🇧 What is the PWAA Format? (English)
@@ -155,3 +157,5 @@ The built-in cloning tool ('pwaa-builder scrape') was created with the purpose o
 
 
 👉 [**Read the Installation Guide and Full Commands in the SDK Documentation**](https://github.com/Filipe-Lunfuankenda/pwaa-core/blob/main/sdk/SDK_README.md)
+
+👉 [**Also check out the Official Concise Documentation of the PWAA Format**](https://github.com/Filipe-Lunfuankenda/pwaa-core/blob/main/PWAA_DOCUMENTATION.md)
