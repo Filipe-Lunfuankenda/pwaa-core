@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erasmus+ Brno | Study Abroad in Czech Republic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .language-selector:hover .dropdown-menu {
+            display: block;
+        }
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .gallery-item {
+            transition: all 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Header with Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+                    <i class="fas fa-graduation-cap text-white text-xl"></i>
+                </div>
+                <a href="#" class="text-2xl font-bold text-blue-600">Erasmus+ Brno</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobileMenuButton" class="md:hidden text-blue-600">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="text-blue-600 font-medium hover:text-blue-800">Home</a>
+                <a href="#about" class="text-gray-700 font-medium hover:text-blue-600">About Brno</a>
+                <a href="#program" class="text-gray-700 font-medium hover:text-blue-600">Erasmus+</a>
+                <a href="#testimonials" class="text-gray-700 font-medium hover:text-blue-600">Testimonials</a>
+                <a href="#gallery" class="text-gray-700 font-medium hover:text-blue-600">Gallery</a>
+                <a href="#contact" class="text-gray-700 font-medium hover:text-blue-600">Contact</a>
+            </nav>
+            
+            <!-- Language Selector -->
+            <div class="hidden md:block language-selector relative">
+                <button class="flex items-center text-gray-700 hover:text-blue-600">
+                    <i class="fas fa-globe mr-2"></i>
+                    <span>EN</span>
+                    <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                </button>
+                <div class="dropdown-menu absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md hidden">
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">English</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Português</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Español</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white py-4 border-t">
+            <div class="container mx-auto px-4 flex flex-col space-y-3">
+                <a href="#home" class="text-blue-600 font-medium hover:text-blue-800">Home</a>
+                <a href="#about" class="text-gray-700 font-medium hover:text-blue-600">About Brno</a>
+                <a href="#program" class="text-gray-700 font-medium hover:text-blue-600">Erasmus+</a>
+                <a href="#testimonials" class="text-gray-700 font-medium hover:text-blue-600">Testimonials</a>
+                <a href="#gallery" class="text-gray-700 font-medium hover:text-blue-600">Gallery</a>
+                <a href="#contact" class="text-gray-700 font-medium hover:text-blue-600">Contact</a>
+                <div class="pt-2 border-t flex space-x-4">
+                    <a href="#" class="text-gray-700 hover:text-blue-600">EN</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600">PT</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600">ES</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative bg-blue-600 text-white py-20 md:py-32">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-400 to-blue-800"></div>
+        </div>
+        <div class="container mx-auto px-4 relative z-10 text-center fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">Discover Brno with Erasmus+</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Experience academic excellence, vibrant culture, and unforgettable memories in the heart of Czech Republic</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#program" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-300 shadow-lg">Learn About Erasmus+</a>
+                <a href="#about" class="bg-transparent border-2 border-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">Explore Brno</a>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 w-full">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120">
+                <path fill="#fff" fill-opacity="1" d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,85.3C672,75,768,85,864,106.7C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Quick Facts Section -->
+    <section class="bg-gray-100 py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+                    <div class="text-blue-600 text-3xl mb-3">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-1">13+ Universities</h3>
+                    <p class="text-gray-600">Top-ranked institutions</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+                    <div class="text-blue-600 text-3xl mb-3">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-1">100+ Courses</h3>
+                    <p class="text-gray-600">In English & other languages</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+                    <div class="text-blue-600 text-3xl mb-3">
+                        <i class="fas fa-euro-sign"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-1">Affordable Living</h3>
+                    <p class="text-gray-600">Budget-friendly costs</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+                    <div class="text-blue-600 text-3xl mb-3">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-1">Vibrant Community</h3>
+                    <p class="text-gray-600">International students</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Brno Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Why Choose Brno?</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto"></div>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <div class="lg:w-1/2">
+                    <div class="relative rounded-xl overflow-hidden shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1584727638099-6a0dc0c179d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Brno city view" class="w-full h-auto">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-6 text-white">
+                            <h3 class="text-xl font-semibold">Brno, Czech Republic</h3>
+                            <p>Heart of Moravia</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">The Student City of Czech Republic</h3>
+                    <p class="text-gray-600 mb-6">Brno, the second largest city in the Czech Republic, is a vibrant academic hub with over 89,000 students. Known for its beautiful architecture, rich history, and innovative spirit, Brno offers an ideal environment for Erasmus+ students.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 text-blue-600 mt-1 mr-3">
+                                <i class="fas fa-monument"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800">Cultural Highlights</h4>
+                                <p class="text-gray-600 text-sm">Explore Špilberk Castle, Villa Tugendhat (UNESCO site), and the vibrant arts scene</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 text-blue-600 mt-1 mr-3">
+                                <i class="fas fa-beer"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800">Local Traditions</h4>
+                                <p class="text-gray-600 text-sm">Experience Czech beer culture, traditional Moravian festivals, and delicious cuisine</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 text-blue-600 mt-1 mr-3">
+                                <i class="fas fa-subway"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800">Great Transportation</h4>
+                                <p class="text-gray-600 text-sm">Efficient public transport, bike-friendly city, and excellent European connections</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <a href="#" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition duration-300">
+                            Discover More About Brno <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Universities Section -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Top Universities in Brno</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Brno hosts several prestigious higher education institutions that welcome Erasmus+ students</p>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mt-4"></div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <div class="h-48 bg-blue-50 flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/1/1d/Masaryk_University_logo.png" alt="Masaryk University logo" class="h-32 object-contain">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Masaryk University</h3>
+                        <p class="text-gray-600 mb-4">Founded in 1919, it's the second largest university in Czech Republic with 10 faculties.</p>
+                        <a href="#" class="text-blue-600 font-medium hover:text-blue-800 inline-flex items-center">
+                            Learn more <i class="fas fa-external-link-alt ml-1 text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <div class="h-48 bg-blue-50 flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1f/But_logo_en.png" alt="Brno University of Technology logo" class="h-24 object-contain">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Brno University of Technology</h3>
+                        <p class="text-gray-600 mb-4">Leading technical university with strong research programs and international cooperation.</p>
+                        <a href="#" class="text-blue-600 font-medium hover:text-blue-800 inline-flex items-center">
+                            Learn more <i class="fas fa-external-link-alt ml-1 text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <div class="h-48 bg-blue-50 flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Mendel_University_Logo.png" alt="Mendel University logo" class="h-20 object-contain">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Mendel University</h3>
+                        <p class="text-gray-600 mb-4">Specializing in agriculture, forestry, economics and landscape engineering.</p>
+                        <a href="#" class="text-blue-600 font-medium hover:text-blue-800 inline-flex items-center">
+                            Learn more <i class="fas fa-external-link-alt ml-1 text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block bg-white border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition duration-300">
+                    View All Partner Institutions <i class="fas fa-chevron-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Erasmus Program Section -->
+    <section id="program" class="py-20 bg-blue-600 text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <div class="lg:w-1/2 order-2 lg:order-1">
+                    <h2 class="text-3xl font-bold mb-6">Erasmus+ Program in Brno</h2>
+                    <p class="text-blue-100 mb-6">The Erasmus+ programme provides opportunities for students to study, train, gain work experience and volunteer abroad. Brno is one of the most popular Erasmus+ destinations in Central Europe.</p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 text-blue-300 mt-1 mr-4">
+                                <i class="fas fa-check-circle text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-lg">Who can participate?</h4>
+                                <p class="text-blue-100">Students registered in higher education institutions holding an Erasmus Charter for Higher Education</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 text-blue-300 mt-1 mr-4">
+                                <i class="fas fa-check-circle text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-lg">Duration</h4>
+                                <p class="text-blue-100">Study periods abroad last from 3 to 12 months (or 2 to 12 months for traineeships)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 text-blue-300 mt-1 mr-4">
+                                <i class="fas fa-check-circle text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-lg">Financial Support</h4>
+                                <p class="text-blue-100">Monthly EU grants to help cover living costs in another country (amount varies by country)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <a href="#" class="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-300 mr-3 mb-3">
+                            Application Process <i class="fas fa-file-alt ml-2"></i>
+                        </a>
+                        <a href="#" class="inline-block bg-transparent border-2 border-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">
+                            Grant Information <i class="fas fa-euro-sign ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 order-1 lg:order-2">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Students on Erasmus" class="rounded-xl shadow-xl w-full">
+                        <div class="absolute -bottom-6 -right-6 bg-white text-gray-800 p-4 rounded-lg shadow-lg w-3/4">
+                            <h4 class="font-bold mb-2">Quick Facts:</h4>
+                            <ul class="text-sm space-y-1">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-blue-600 mr-2 mt-1"></i>
+                                    <span>Over 1,500 Erasmus+ students come to Brno yearly</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-blue-600 mr-2 mt-1"></i>
+                                    <span>More than 300 bilateral agreements with EU universities</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-blue-600 mr-2 mt-1"></i>
+                                    <span>Special orientation programs for international students</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Apply Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">How to Apply for Erasmus+</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Follow these steps to start your Erasmus+ adventure in Brno</p>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mt-4"></div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/3 bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition duration-300 text-center">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+                        <span class="font-bold">1</span>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Check Eligibility</h3>
+                    <p class="text-gray-600">Verify with your home university that they have an Erasmus+ agreement with a Brno institution and that you meet all requirements.</p>
+                </div>
+                
+                <div class="md:w-1/3 bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition duration-300 text-center">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+                        <span class="font-bold">2</span>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Prepare Documents</h3>
+                    <p class="text-gray-600">Gather necessary documents including Learning Agreement, Transcript of Records, CV, Motivation Letter, and Language Certificate.</p>
+                </div>
+                
+                <div class="md:w-1/3 bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition duration-300 text-center">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+                        <span class="font-bold">3</span>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Submit Application</h3>
+                    <p class="text-gray-600">Apply through your home university's International Office by their deadline (typically 6-9 months before exchange).</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 bg-blue-50 rounded-xl p-8 border border-blue-100">
+                <h3 class="text-xl font-semibold text-blue-800 mb-4">Important Dates & Deadlines</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white p-4 rounded-lg">
+                        <h4 class="font-medium text-blue [CONTINUED] 
+```html
+-600 mb-2">Fall Semester</h4>
+                        <p class="text-sm text-gray-600">Application Deadline: May 1</p>
+                        <p class="text-sm text-gray-600">Semester Dates: September - December</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <h4 class="font-medium text-blue-600 mb-2">Spring Semester</h4>
+                        <p class="text-sm text-gray-600">Application Deadline: November 1</p>
+                        <p class="text-sm text-gray-600">Semester Dates: February - May</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <h4 class="font-medium text-blue-600 mb-2">Orientation Weeks</h4>
+                        <p class="text-sm text-gray-600">Fall: Last week of August</p>
+                        <p class="text-sm text-gray-600">Spring: Last week of January</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-3">Student Experiences</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">What Erasmus+ students say about their time in Brno</p>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mt-4"></div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-gray-50 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maria" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold">Maria, Spain</h4>
+                            <div class="flex text-yellow-400 text-sm">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-4">"Brno completely exceeded my expectations! The city has an amazing student atmosphere, with so many international students and events. The cost of living is affordable compared to Western Europe, and Czech people are very friendly once you get to know them."</p>
+                    <div class="text-xs text-gray-500">Masaryk University, Political Science</div>
+                </div>
+                
+                <div class="testimonial-card bg-gray-50 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Luca" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold">Luca, Italy</h4>
+                            <div class="flex text-yellow-400 text-sm">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-4">"The Erasmus+ experience in Brno was life-changing. The academic level at Brno University of Technology was excellent, and I made friends from all over Europe. Traveling around Central Europe was easy and cheap from Brno's central location."</p>
+                    <div class="text-xs text-gray-500">BUT, Computer Science</div>
+                </div>
+                
+                <div class="testimonial-card bg-gray-50 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Sophie" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold">Sophie, France</h4>
+                            <div class="flex text-yellow-400 text-sm">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-4">"Brno is the perfect student city - not too big, not too small. The Erasmus Student Network organized amazing events that helped me settle in. The architecture is beautiful, nightlife is great, and Czech beer is the best in the world!"</p>
+                    <div class="text-xs text-gray-500">Mendel University, Environmental Studies</div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <a href="#" class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800">
+                    Read more testimonials <i class="fas fa-long-arrow-alt-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Multimedia Gallery Section -->
+    <section id="gallery" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-3">Life in Brno</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Explore Brno through photos and videos from our students</p>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mt-4"></div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
+                <div class="gallery-item overflow-hidden rounded-lg shadow-md">
+                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Brno city center" class="w-full h-48 object-cover hover:scale-105 transition duration-300">
+                </div>
+                <div class="gallery-item overflow-hidden rounded-lg shadow-md">
+                    <img src="https://images.unsplash.com/photo-1513828583688-c52646db42da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Brno student life" class="w-full h-48 object-cover hover:scale-105 transition duration-300">
+                </div>
+                <div class="gallery-item overflow-hidden rounded-lg shadow-md">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Erasmus students" class="w-full h-48 object-cover hover:scale-105 transition duration-300">
+                </div>
+                <div class="gallery-item overflow-hidden rounded-lg shadow-md">
+                    <img src="https://images.unsplash.com/photo-1527525443983-6e60c75fff46?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1520&q=80" alt="Brno nightlife" class="w-full h-48 object-cover hover:scale-105 transition duration-300">
+                </div>
+                <div class="gallery-item overflow-hidden rounded-lg shadow-md">
+                    <img src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Brno architecture" class="w-full h-48 object-cover hover:scale-105 transition duration-300">
+                </div>
+                <div class="gallery-item overflow-hidden rounded-lg shadow-md">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Brno parks" class="w-full h-48 object-cover hover:scale-105 transition duration-300">
+                </div>
+                <div class="gallery-item overflow-hidden rounded-lg shadow-md">
+                    <img src="https://images.unsplash.com/photo-1513828583688-c52646db42da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Brno cafes" class="w-full h-48 object-cover hover:scale-105 transition duration-300">
+                </div>
+                <div class="gallery-item overflow-hidden rounded-lg shadow-md">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Brno culture" class="w-full h-48 object-cover hover:scale-105 transition duration-300">
+                </div>
+            </div>
+            
+            <div class="video-container rounded-xl overflow-hidden shadow-lg mb-8">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/h1IeLKOVOzA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            
+            <div class="text-center">
+                <a href="#" class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800">
+                    View full gallery <i class="fas fa-images ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-3">Need Help?</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Contact us for more information about Erasmus+ in Brno</p>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mt-4"></div>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/2">
+                    <form class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                            <select id="subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option>General Inquiry</option>
+                                <option>Application Process</option>
+                                <option>Housing Questions</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                            <textarea id="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition duration-300 w-full md:w-auto">Send Message</button>
+                    </form>
+                </div>
+                
+                <div class="lg:w-1/2">
+                    <div class="bg-gray-50 p-8 rounded-xl h-full">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6">Useful Contacts</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 text-blue-600 mt-1 mr-4">
+                                    <i class="fas fa-university text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Erasmus+ Coordinators</h4>
+                                    <p class="text-gray-600 text-sm">international@muni.cz<br>+420 549 494 949</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 text-blue-600 mt-1 mr-4">
+                                    <i class="fas fa-home text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Student Housing</h4>
+                                    <p class="text-gray-600 text-sm">housing@muni.cz<br>+420 549 484 848</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 text-blue-600 mt-1 mr-4">
+                                    <i class="fas fa-users text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Erasmus Student Network</h4>
+                                    <p class="text-gray-600 text-sm">esn.brno@gmail.com<br>www.esnbrno.cz</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 text-blue-600 mt-1 mr-4">
+                                    <i class="fas fa-info-circle text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Brno Tourist Information</h4>
+                                    <p class="text-gray-600 text-sm">info@ticbrno.cz<br>+420 542 427 150</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 pt-6 border-t border-gray-200">
+                            <h4 class="font-medium text-gray-800 mb-3">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition duration-300">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition duration-300">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition duration-300">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition duration-300">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <div class="h-96 w-full bg-gray-200">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d26111.53576962065!2d16.584946438366146!3d49.19511171243616!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4712945a203aa1f1%3A0x5e4775e9f99357df!2sBrno%2C%20Czechia!5e0!3m2!1sen!2sus!4v1686831260485!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-3">Frequently Asked Questions</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Find answers to common questions about Erasmus+ in Brno</p>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mt-4"></div>
+            </div>
+            
+            <div class="max-w-3xl mx-auto space-y-4">
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="faq-question w-full text-left px-6 py-4 flex justify-between items-center font-medium text-gray-800 hover:bg-gray-50 transition duration-300">
+                        <span>When should I start preparing for my Erasmus+ semester in Brno?</span>
+                        <i class="fas fa-chevron-down text-blue-600 text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer px-6 pb-4 text-gray-600 hidden">
+                        We recommend starting the application process 6-9 months before your planned arrival. This gives you enough time to complete all paperwork, apply for accommodation, arrange visas (if needed), and prepare for your stay.
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="faq-question w-full text-left px-6 py-4 flex justify-between items-center font-medium text-gray-800 hover:bg-gray-50 transition duration-300">
+                        <span>What's the average monthly budget for an Erasmus student in Brno?</span>
+                        <i class="fas fa-chevron-down text-blue-600 text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer px-6 pb-4 text-gray-600 hidden">
+                        Most students find they need between €500-€700 per month, including accommodation (€200-€350), food (€150-€200), transportation (€10-€20), and leisure activities. Brno is significantly more affordable than Western European cities.
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="faq-question w-full text-left px-6 py-4 flex justify-between items-center font-medium text-gray-800 hover:bg-gray-50 transition duration-300">
+                        <span>Do I need to speak Czech to study in Brno?</span>
+                        <i class="fas fa-chevron-down text-blue-600 text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer px-6 pb-4 text-gray-600 hidden">
+                        No, many courses are offered in English and other languages. However, learning basic Czech phrases will enhance your experience. Most young Czechs speak English, especially in academic environments.
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="faq-question w-full text-left px-6 py-4 flex justify-between items-center font-medium text-gray-800 hover:bg-gray-50 transition duration-300">
+                        <span>What kind of accommodation options are available?</span>
+                        <i class="fas fa-chevron-down text-blue-600 text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer px-6 pb-4 text-gray-600 hidden">
+                        Options include university dormitories (most affordable), private student residences, shared apartments, and private rentals. The Erasmus Student Network can help you find suitable housing.
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="faq-question w-full text-left px-6 py-4 flex justify-between items-center font-medium text-gray-800 hover:bg-gray-50 transition duration-300">
+                        <span>How easy is it to travel around Europe from Brno?</span>
+                        <i class="fas fa-chevron-down text-blue-600 text-sm transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer px-6 pb-4 text-gray-600 hidden">
+                        Very easy! Brno has excellent transport connections with regular trains and buses to Vienna (1.5h), Prague (2.5h), Bratislava (1.5h), Budapest (4h) and many other destinations. The student-friendly Student Agency bus network offers discounted student tickets.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-3xl font-bold mb-4">Stay Updated</h2>
+                <p class="text-blue-100 mb-8">Subscribe to our newsletter for the latest information about Erasmus+ opportunities in Brno, application deadlines, and student events.</p>
+                
+                <form class="flex flex-col md:flex-row gap-4 max-w-lg mx-auto">
+                    <input type="email" placeholder="Your email address" class="flex-grow px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-800">
+                    <button type="submit" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-300 shadow-md">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Erasmus+ Brno</h3>
+                    <p class="text-gray-400 mb-4">Promoting academic mobility and cultural exchange in Brno, Czech Republic since 1987.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition duration-300">About Brno</a></li>
+                        <li><a href="#program" class="text-gray-400 hover:text-white transition duration-300">Erasmus+ Program</a></li>
+                        <li><a href="#testimonials" class="text-gray-400 hover:text-white transition duration-300">Student Testimonials</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Application Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Housing Information</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Cost of Living Calculator</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Academic Calendar</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Czech Language Basics</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Contact Info</h4>
+                    <address class="not-italic text-gray-400 space-y-2">
+                        <p class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-blue-400"></i>
+                            <span>Erasmus Office Brno<br>Veveří 68, 611 80 Brno<br>Czech Republic</span>
+                        </p>
+                        <p class="flex items-center">
+                            <i class="fas fa-phone-alt mr-3 text-blue-400"></i>
+                            <span>+420 123 456 789</span>
+                        </p>
+                        <p class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-blue-400"></i>
+                            <span>info@erasmusbrno.cz</span>
+                        </p>
+                    </address>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
+                <p>© 2023 Erasmus+ Brno. All rights reserved. | <a href="#" class="hover:text-white transition duration-300">Privacy Policy</a> | <a href="#" class="hover:text-white transition duration-300">Terms of Service</a></p>
+                <p class="mt-2">This project has been funded with support from the European Commission. This publication reflects the views only of the author, and the Commission cannot be held responsible for any use which may be made of the information contained therein.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="fixed bottom-6 right-6 bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 opacity-0 invisible hover:bg-blue-700">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('i');
+                
+                answer.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+                
+                // Close other open questions
+                document.querySelectorAll('.faq-question').forEach(q => {
+                    if (q !== question) {
+                        q.nextElementSibling.classList.add('hidden');
+                        q.querySelector('i').classList.remove('rotate-180');
+                    }
+                });
+            });
+        });
+
+        // Back to top button
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Fade in animation for elements
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeIn');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        fadeElements.forEach(element => {
+            fadeInObserver.observe(element);
+        });
+    </script>
+</body>
+</html>

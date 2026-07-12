@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NanoVisio - Explorando o Nanomundo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f8ff; /* AliceBlue - um branco levemente azulado */
+            color: #0c2f57; /* Azul escuro para texto principal */
+        }
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #003973 0%, #005C97 50%, #36A2EB 100%);
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            color: #005C97; /* Azul médio para títulos de seção */
+        }
+        .nav-link {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #e0f2fe;
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-duration: 300ms;
+        }
+        .nav-link:hover {
+            background-color: #0369a1;
+            color: #fff;
+        }
+        .nav-link-mobile {
+            display: block;
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #334155;
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-duration: 300ms;
+        }
+        .nav-link-mobile:hover {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        .btn-primary {
+            background-color: #0284c7;
+            color: #fff;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.1);
+            transition: all 0.3s;
+            transform: scale(1);
+        }
+        .btn-primary:hover {
+            background-color: #0369a1;
+            box-shadow: 0 8px 16px rgba(14, 165, 233, 0.15);
+            transform: scale(1.05);
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: #0369a1;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: 2px solid #0284c7;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: #e0f2fe;
+            border-color: #0369a1;
+        }
+        .btn-gemini {
+            background-color: #f59e0b;
+            color: #fff;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(251, 191, 36, 0.1);
+            transition: all 0.3s;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transform: scale(1);
+        }
+        .btn-gemini:hover {
+            background-color: #d97706;
+            box-shadow: 0 8px 16px rgba(251, 191, 36, 0.15);
+            transform: scale(1.05);
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(30, 136, 229, 0.08);
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(30, 136, 229, 0.16);
+            transform: translateY(-0.25rem);
+        }
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: transparent;
+            box-shadow: 0 0 0 2px #0ea5e9;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #334155;
+            margin-bottom: 0.25rem;
+        }
+        /* Animação de fade-in */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Estilo para o logo SVG */
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.75rem; /* 28px */
+            font-weight: 700;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+            padding-top: 60px;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .modal-close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .modal-close-button:hover,
+        .modal-close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #0ea5e9; /* Sky blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-sky-800 text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#home" class="flex items-center space-x-2">
+                    <svg class="h-10 w-10 text-sky-400" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M50 0C22.3858 0 0 22.3858 0 50C0 77.6142 22.3858 100 50 100C77.6142 100 100 77.6142 100 50C100 22.3858 77.6142 0 50 0ZM50 10C27.9086 10 10 27.9086 10 50C10 72.0914 27.9086 90 50 90C72.0914 90 90 72.0914 90 50C90 27.9086 72.0914 10 50 10Z"/>
+                        <circle cx="50" cy="50" r="5" fill="#FFFFFF"/>
+                        <circle cx="35" cy="40" r="3" fill="#FFFFFF"/>
+                        <circle cx="65" cy="40" r="3" fill="#FFFFFF"/>
+                        <circle cx="35" cy="60" r="3" fill="#FFFFFF"/>
+                        <circle cx="65" cy="60" r="3" fill="#FFFFFF"/>
+                        <circle cx="50" cy="30" r="3" fill="#FFFFFF"/>
+                        <circle cx="50" cy="70" r="3" fill="#FFFFFF"/>
+                    </svg>
+                    <span class="logo-text">NanoVisio</span>
+                </a>
+
+                <nav class="hidden md:flex space-x-2">
+                    <a href="#home" class="nav-link">Página Inicial</a>
+                    <a href="#sobre" class="nav-link">Sobre Nanotecnologia</a>
+                    <a href="#ilustracoes" class="nav-link">Ilustrações</a>
+                    <a href="#videos" class="nav-link">Vídeos Interativos</a>
+                    <a href="#contato" class="nav-link">Contato</a>
+                </nav>
+
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-sky-200 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
+            <a href="#home" class="nav-link-mobile mobile-nav-item">Página Inicial</a>
+            <a href="#sobre" class="nav-link-mobile mobile-nav-item">Sobre Nanotecnologia</a>
+            <a href="#ilustracoes" class="nav-link-mobile mobile-nav-item">Ilustrações</a>
+            <a href="#videos" class="nav-link-mobile mobile-nav-item">Vídeos Interativos</a>
+            <a href="#contato" class="nav-link-mobile mobile-nav-item">Contato</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero-bg text-white py-20 md:py-32">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="orbitron text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                    Bem-vindo à <span class="text-sky-300">NanoVisio</span>
+                </h1>
+                <p class="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-sky-100">
+                    Desvendando os mistérios da nanotecnologia de forma interativa, visual e acessível para todos.
+                </p>
+                <a href="#sobre" class="btn-primary text-lg">Explore o Nanomundo</a>
+            </div>
+        </section>
+
+        <section id="sobre" class="py-16 md:py-24 bg-white fade-in-section">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-3xl sm:text-4xl font-bold text-center mb-12">O que é Nanotecnologia?</h2>
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    <div>
+                        <img src="https://placehold.co/600x400/36A2EB/FFFFFF?text=Ilustração+Conceitual+de+Nanotecnologia" alt="Ilustração conceitual de nanotecnologia" class="rounded-lg shadow-xl w-full">
+                    </div>
+                    <div class="text-lg text-gray-700 space-y-4">
+                        <p><strong>NanoVisio</strong> é sua porta de entrada para o fascinante universo da nanotecnologia. Aqui, transformamos conceitos complexos em aprendizado dinâmico e visualmente estimulante.</p>
+                        <p>A nanotecnologia é a manipulação da matéria em uma escala atômica, molecular e supramolecular. Isso significa trabalhar com estruturas que têm dimensões de 1 a 100 nanômetros (um nanômetro é um bilionésimo de metro!).</p>
+                        <p>Essa capacidade de controlar a matéria em nível tão pequeno abre um leque de possibilidades revolucionárias em diversas áreas.</p>
+                    </div>
+                </div>
+
+                <div class="mt-16 pt-10 border-t border-gray-200">
+                    <h3 class="section-title text-2xl sm:text-3xl font-bold text-center mb-8">Pergunte ao NanoBot ✨</h3>
+                    <div class="max-w-xl mx-auto bg-sky-50 p-6 rounded-lg shadow-md">
+                        <div class="mb-4">
+                            <label for="nanobot-question" class="form-label">Faça a sua pergunta sobre nanotecnologia:</label>
+                            <input type="text" id="nanobot-question" class="form-input" placeholder="Ex: Como funcionam os nanorobôs?">
+                        </div>
+                        <button id="ask-nanobot-button" class="btn-gemini w-full">
+                            <span>Perguntar ao NanoBot</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-stars" viewBox="0 0 16 16">
+                                <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828l.645-1.937zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.734 1.734 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.734 1.734 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.734 1.734 0 0 0 3.407 2.31l.387-1.162zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L10.863.1z"/>
+                            </svg>
+                        </button>
+                        <div id="nanobot-response-area" class="mt-4 p-4 bg-white rounded-md shadow min-h-[50px] text-gray-700 text-sm">
+                            Aguardando a sua pergunta...
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="mt-16 pt-10 border-t border-gray-200">
+                    <h3 class="section-title text-2xl sm:text-3xl font-bold text-center mb-10">Aplicações da Nanotecnologia</h3>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div class="card p-6 text-center">
+                            <img src="https://placehold.co/100x100/005C97/FFFFFF?text=Medicina" alt="Ícone representando nanomedicina" class="mx-auto mb-4 h-16 w-16 rounded-full">
+                            <h4 class="text-xl font-semibold mb-2 text-sky-700">Medicina</h4>
+                            <p class="text-gray-600 text-sm">Novos diagnósticos, tratamentos direcionados contra o câncer, e regeneração de tecidos.</p>
+                        </div>
+                        <div class="card p-6 text-center">
+                             <img src="https://placehold.co/100x100/005C97/FFFFFF?text=Eletrônicos" alt="Ícone representando nanoeletrônicos" class="mx-auto mb-4 h-16 w-16 rounded-full">
+                            <h4 class="text-xl font-semibold mb-2 text-sky-700">Eletrônicos</h4>
+                            <p class="text-gray-600 text-sm">Processadores mais rápidos, telas flexíveis, e armazenamento de dados ultra-denso.</p>
+                        </div>
+                        <div class="card p-6 text-center">
+                             <img src="https://placehold.co/100x100/005C97/FFFFFF?text=Materiais" alt="Ícone representando nanomateriais" class="mx-auto mb-4 h-16 w-16 rounded-full">
+                            <h4 class="text-xl font-semibold mb-2 text-sky-700">Materiais</h4>
+                            <p class="text-gray-600 text-sm">Materiais mais leves e resistentes, superfícies autolimpantes, e tecidos inteligentes.</p>
+                        </div>
+                        <div class="card p-6 text-center">
+                            <img src="https://placehold.co/100x100/005C97/FFFFFF?text=Ambiente" alt="Ícone representando nanotecnologia e meio ambiente" class="mx-auto mb-4 h-16 w-16 rounded-full">
+                            <h4 class="text-xl font-semibold mb-2 text-sky-700">Meio Ambiente</h4>
+                            <p class="text-gray-600 text-sm">Despoluição da água, energias renováveis mais eficientes, e sensores ambientais.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ilustracoes" class="py-16 md:py-24 bg-sky-50 fade-in-section">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-3xl sm:text-4xl font-bold text-center mb-12">Galeria de Ilustrações</h2>
+                <p class="text-center text-lg text-gray-700 mb-10 max-w-2xl mx-auto">Visualize o mundo nanoscópico através de ilustrações que simplificam conceitos complexos.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card">
+                        <img src="https://placehold.co/600x400/1E88E5/FFFFFF?text=Estrutura+Molecular" alt="Ilustração de uma estrutura molecular complexa" class="w-full h-56 object-cover">
+                        <div class="card-content">
+                            <h5 class="text-xl font-semibold text-sky-700 mb-2">Estruturas Moleculares</h5>
+                            <p class="text-gray-600 text-sm mb-4">Representação de moléculas e como elas interagem na nanoescala.</p>
+                        </div>
+                        <button class="btn-gemini m-4 explain-illustration-button" data-illustration-title="Estruturas Moleculares" data-illustration-alt="Ilustração de uma estrutura molecular complexa">
+                            <span>Explicar Ilustração ✨</span>
+                        </button>
+                    </div>
+                    <div class="card">
+                        <img src="https://placehold.co/600x400/1E88E5/FFFFFF?text=Nanorobôs+em+Ação" alt="Ilustração de nanorobôs atuando no corpo humano" class="w-full h-56 object-cover">
+                        <div class="card-content">
+                            <h5 class="text-xl font-semibold text-sky-700 mb-2">Nanorobôs</h5>
+                            <p class="text-gray-600 text-sm mb-4">Conceito artístico de nanorobôs realizando tarefas específicas.</p>
+                        </div>
+                        <button class="btn-gemini m-4 explain-illustration-button" data-illustration-title="Nanorobôs em Ação" data-illustration-alt="Ilustração de nanorobôs atuando no corpo humano">
+                            <span>Explicar Ilustração ✨</span>
+                        </button>
+                    </div>
+                    <div class="card">
+                        <img src="https://placehold.co/600x400/1E88E5/FFFFFF?text=Material+Nanoestruturado" alt="Ilustração de um material com nanoestrutura" class="w-full h-56 object-cover">
+                        <div class="card-content">
+                            <h5 class="text-xl font-semibold text-sky-700 mb-2">Materiais Nanoestruturados</h5>
+                            <p class="text-gray-600 text-sm mb-4">Visualização de como a nanoestrutura confere propriedades únicas aos materiais.</p>
+                        </div>
+                        <button class="btn-gemini m-4 explain-illustration-button" data-illustration-title="Materiais Nanoestruturados" data-illustration-alt="Ilustração de um material com nanoestrutura">
+                            <span>Explicar Ilustração ✨</span>
+                        </button>
+                    </div>
+                     <div class="card">
+                        <img src="https://placehold.co/600x400/1E88E5/FFFFFF?text=Chip+Nanotecnológico" alt="Ilustração de um chip com componentes nanotecnológicos" class="w-full h-56 object-cover">
+                        <div class="card-content">
+                            <h5 class="text-xl font-semibold text-sky-700 mb-2">Chips Nanotecnológicos</h5>
+                            <p class="text-gray-600 text-sm mb-4">Detalhes de circuitos integrados em escala nanométrica.</p>
+                        </div>
+                         <button class="btn-gemini m-4 explain-illustration-button" data-illustration-title="Chips Nanotecnológicos" data-illustration-alt="Ilustração de um chip com componentes nanotecnológicos">
+                            <span>Explicar Ilustração ✨</span>
+                        </button>
+                    </div>
+                    <div class="card">
+                        <img src="https://placehold.co/600x400/1E88E5/FFFFFF?text=Entrega+de+Fármacos" alt="Ilustração de nanopartículas entregando fármacos" class="w-full h-56 object-cover">
+                        <div class="card-content">
+                            <h5 class="text-xl font-semibold text-sky-700 mb-2">Entrega de Fármacos</h5>
+                            <p class="text-gray-600 text-sm mb-4">Nanopartículas transportando medicamentos para células específicas.</p>
+                        </div>
+                        <button class="btn-gemini m-4 explain-illustration-button" data-illustration-title="Entrega de Fármacos com Nanopartículas" data-illustration-alt="Ilustração de nanopartículas entregando fármacos">
+                            <span>Explicar Ilustração ✨</span>
+                        </button>
+                    </div>
+                    <div class="card">
+                        <img src="https://placehold.co/600x400/1E88E5/FFFFFF?text=Sensores+Nano" alt="Ilustração de nanosensores detectando partículas" class="w-full h-56 object-cover">
+                        <div class="card-content">
+                            <h5 class="text-xl font-semibold text-sky-700 mb-2">Nanosensores</h5>
+                            <p class="text-gray-600 text-sm mb-4">Como sensores em nanoescala podem detectar substâncias com alta precisão.</p>
+                        </div>
+                        <button class="btn-gemini m-4 explain-illustration-button" data-illustration-title="Nanosensores em Ação" data-illustration-alt="Ilustração de nanosensores detectando partículas">
+                            <span>Explicar Ilustração ✨</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="videos" class="py-16 md:py-24 bg-white fade-in-section">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-3xl sm:text-4xl font-bold text-center mb-12">Vídeos Interativos</h2>
+                <p class="text-center text-lg text-gray-700 mb-10 max-w-2xl mx-auto">Aprenda nanotecnologia de forma dinâmica com nossos vídeos educativos e interativos. (Conteúdo demonstrativo)</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card">
+                        <div class="aspect-w-16 aspect-h-9">
+                            <img src="https://placehold.co/600x338/0077B6/FFFFFF?text=Vídeo+1:+Introdução+à+Nano" alt="Placeholder para vídeo interativo sobre introdução à nanotecnologia" class="w-full h-full object-cover rounded-t-xl">
+                        </div>
+                        <div class="p-6">
+                            <h5 class="text-xl font-semibold text-sky-700 mb-2">Introdução à Nanotecnologia</h5>
+                            <p class="text-gray-600 text-sm mb-3">Um mergulho inicial no que é a nanotecnologia e seu impacto.</p>
+                            <button class="btn-secondary text-sm w-full">Assistir (Simulado)</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="aspect-w-16 aspect-h-9">
+                             <img src="https://placehold.co/600x338/0077B6/FFFFFF?text=Vídeo+2:+Aplicações+Médicas" alt="Placeholder para vídeo interativo sobre aplicações médicas da nanotecnologia" class="w-full h-full object-cover rounded-t-xl">
+                        </div>
+                        <div class="p-6">
+                            <h5 class="text-xl font-semibold text-sky-700 mb-2">Nanomedicina em Foco</h5>
+                            <p class="text-gray-600 text-sm mb-3">Descubra como a nanotecnologia está revolucionando a medicina.</p>
+                            <button class="btn-secondary text-sm w-full">Assistir (Simulado)</button>
+                        </div>
+                    </div>
+                </div>
+                 <p class="text-center text-md text-gray-500 mt-10">Em breve: mais vídeos com elementos interativos para testar seu conhecimento!</p>
+            </div>
+        </section>
+
+        <section id="contato" class="py-16 md:py-24 bg-sky-50 fade-in-section">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-3xl sm:text-4xl font-bold text-center mb-12">Entre em Contato</h2>
+                <p class="text-center text-lg text-gray-700 mb-10 max-w-2xl mx-auto">Tem dúvidas, sugestões ou quer saber mais? Preencha o formulário abaixo.</p>
+                <div class="max-w-2xl mx-auto bg-white p-8 sm:p-10 rounded-xl shadow-2xl">
+                    <form id="contactForm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="name" class="form-label">Nome Completo</label>
+                                <input type="text" id="name" name="name" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="email" class="form-label">Seu Melhor Email</label>
+                                <input type="email" id="email" name="email" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="subject" class="form-label">Assunto</label>
+                            <input type="text" id="subject" name="subject" class="form-input" required>
+                        </div>
+                        <div class="mb-8">
+                            <label for="message" class="form-label">Sua Mensagem</label>
+                            <textarea id="message" name="message" rows="5" class="form-input" required></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn-primary text-lg w-full sm:w-auto">Enviar Mensagem</button>
+                        </div>
+                    </form>
+                    <div id="form-message" class="mt-6 text-center"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-sky-900 text-sky-200 py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-4">
+                <a href="#home" class="flex items-center justify-center space-x-2 mb-2">
+                    <svg class="h-8 w-8 text-sky-400" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                         <path fill-rule="evenodd" clip-rule="evenodd" d="M50 0C22.3858 0 0 22.3858 0 50C0 77.6142 22.3858 100 50 100C77.6142 100 100 77.6142 100 50C100 22.3858 77.6142 0 50 0ZM50 10C27.9086 10 10 27.9086 10 50C10 72.0914 27.9086 90 50 90C72.0914 90 90 72.0914 90 50C90 27.9086 72.0914 10 50 10Z"/>
+                        <circle cx="50" cy="50" r="5" fill="#FFFFFF"/>
+                        <circle cx="35" cy="40" r="3" fill="#FFFFFF"/>
+                        <circle cx="65" cy="40" r="3" fill="#FFFFFF"/>
+                        <circle cx="35" cy="60" r="3" fill="#FFFFFF"/>
+                        <circle cx="65" cy="60" r="3" fill="#FFFFFF"/>
+                        <circle cx="50" cy="30" r="3" fill="#FFFFFF"/>
+                        <circle cx="50" cy="70" r="3" fill="#FFFFFF"/>
+                    </svg>
+                    <span class="orbitron text-2xl font-semibold">NanoVisio</span>
+                </a>
+                <p class="text-sm">Explorando o futuro, uma nanoescala por vez.</p>
+            </div>
+            <p class="text-sm">&copy; <span id="currentYear"></span> NanoVisio. Todos os direitos reservados.</p>
+            <p class="text-xs mt-2">Design e Desenvolvimento com foco em Educação Tecnológica.</p>
+        </div>
+    </footer>
+
+    <div id="geminiResponseModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" id="closeGeminiModal">&times;</span>
+            <h3 id="geminiModalTitle" class="text-xl orbitron font-semibold text-sky-700 mb-4">Resposta do NanoMundo</h3>
+            <div id="geminiModalBody" class="text-gray-700 text-sm leading-relaxed">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Código existente ---
+            // Menu Mobile
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileNavItems = mobileMenu.querySelectorAll('.mobile-nav-item');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        mobileMenuButton.innerHTML = `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>`;
+                    } else {
+                        mobileMenuButton.innerHTML = `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>`;
+                    }
+                });
+                mobileNavItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuButton.innerHTML = `<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>`;
+                    });
+                });
+            }
+
+            // Ano atual no rodapé
+            const currentYearElement = document.getElementById('currentYear');
+            if (currentYearElement) {
+                currentYearElement.textContent = new Date().getFullYear();
+            }
+
+            // Formulário de Contato
+            const contactForm = document.getElementById('contactForm');
+            const formMessage = document.getElementById('form-message');
+            if (contactForm && formMessage) {
+                contactForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const name = document.getElementById('name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const subject = document.getElementById('subject').value.trim();
+                    const messageText = document.getElementById('message').value.trim(); // Renomeada para evitar conflito
+                    if (!name || !email || !subject || !messageText) {
+                        formMessage.textContent = 'Por favor, preencha todos os campos obrigatórios.';
+                        formMessage.className = 'mt-6 text-center text-red-600';
+                        return;
+                    }
+                    if (!validateEmail(email)) {
+                        formMessage.textContent = 'Por favor, insira um endereço de e-mail válido.';
+                        formMessage.className = 'mt-6 text-center text-red-600';
+                        return;
+                    }
+                    formMessage.textContent = 'Mensagem enviada com sucesso! (Simulação)';
+                    formMessage.className = 'mt-6 text-center text-green-600';
+                    contactForm.reset();
+                    setTimeout(() => { formMessage.textContent = ''; }, 5000);
+                });
+            }
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(String(email).toLowerCase());
+            }
+
+            // Animação de Fade-in
+            const sections = document.querySelectorAll('.fade-in-section');
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+            const observer = new IntersectionObserver((entries, obs) => { // obs em vez de observer
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, observerOptions);
+            sections.forEach(section => { observer.observe(section); });
+
+            // --- Fim do código existente ---
+
+            // --- Novas funcionalidades com API Gemini ---
+            const geminiModal = document.getElementById('geminiResponseModal');
+            const geminiModalTitle = document.getElementById('geminiModalTitle');
+            const geminiModalBody = document.getElementById('geminiModalBody');
+            const closeGeminiModalButton = document.getElementById('closeGeminiModal');
+
+            // Função para mostrar o modal
+            function showGeminiModal(title) {
+                geminiModalTitle.textContent = title;
+                geminiModalBody.innerHTML = '<div class="loading-spinner"></div> <p class="text-center mt-2 text-sm text-gray-500">A carregar...</p>';
+                if (geminiModal) geminiModal.style.display = 'flex';
+            }
+
+            // Função para fechar o modal
+            if (closeGeminiModalButton) {
+                closeGeminiModalButton.onclick = function() {
+                    if (geminiModal) geminiModal.style.display = 'none';
+                }
+            }
+            // Fechar modal ao clicar fora
+            window.onclick = function(event) {
+                if (event.target == geminiModal) {
+                    if (geminiModal) geminiModal.style.display = 'none';
+                }
+            }
+
+            // Chave da API (deixe em branco, será fornecida pelo ambiente Canvas)
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            // 1. Funcionalidade "Pergunte ao NanoBot ✨"
+            const nanobotQuestionInput = document.getElementById('nanobot-question');
+            const askNanobotButton = document.getElementById('ask-nanobot-button');
+            const nanobotResponseArea = document.getElementById('nanobot-response-area');
+
+            if (askNanobotButton && nanobotQuestionInput && nanobotResponseArea) {
+                askNanobotButton.addEventListener('click', async () => {
+                    const question = nanobotQuestionInput.value.trim();
+                    if (!question) {
+                        nanobotResponseArea.innerHTML = '<p class="text-red-500">Por favor, escreva uma pergunta.</p>';
+                        return;
+                    }
+
+                    nanobotResponseArea.innerHTML = '<div class="loading-spinner mx-auto"></div> <p class="text-center mt-2 text-sm text-gray-500">NanoBot a pensar...</p>';
+                    
+                    const prompt = `Você é o NanoBot, um assistente virtual especializado em nanotecnologia, parte do site NanoVisio. Responda à seguinte pergunta de forma clara, concisa e educativa, adequada para um público geral interessado em aprender sobre nanotecnologia. Use parágrafos curtos e, se possível, listas para facilitar a leitura. Pergunta: ${question}`;
+                    const payload = {
+                        contents: [{ role: "user", parts: [{ text: prompt }] }]
+                    };
+
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (!response.ok) {
+                            throw new Error(`Erro da API: ${response.status}`);
+                        }
+                        const result = await response.json();
+
+                        if (result.candidates && result.candidates.length > 0 &&
+                            result.candidates[0].content && result.candidates[0].content.parts &&
+                            result.candidates[0].content.parts.length > 0) {
+                            const text = result.candidates[0].content.parts[0].text;
+                            // Simples substituição de \n por <br> para formatação básica HTML
+                            nanobotResponseArea.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
+                        } else {
+                            nanobotResponseArea.innerHTML = '<p class="text-red-500">Desculpe, o NanoBot não conseguiu encontrar uma resposta. Tente reformular a pergunta.</p>';
+                            console.error("Resposta da API inesperada:", result);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao contactar a API Gemini:', error);
+                        nanobotResponseArea.innerHTML = `<p class="text-red-500">Ocorreu um erro ao tentar obter a resposta. Por favor, tente novamente mais tarde. Detalhe: ${error.message}</p>`;
+                    }
+                });
+            }
+
+            // 2. Funcionalidade "Explicar Ilustração ✨"
+            const explainIllustrationButtons = document.querySelectorAll('.explain-illustration-button');
+            explainIllustrationButtons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    const illustrationTitle = button.dataset.illustrationTitle;
+                    const illustrationAlt = button.dataset.illustrationAlt;
+                    
+                    showGeminiModal(`Explicação para: ${illustrationTitle}`);
+
+                    const prompt = `Você é um assistente virtual do site NanoVisio, especializado em explicar conceitos de nanotecnologia. Explique de forma clara e educativa o que a seguinte ilustração sobre nanotecnologia representa: "${illustrationTitle}" (descrita como: "${illustrationAlt}"). A explicação deve ser acessível para um público geral, com cerca de 2-3 parágrafos concisos.`;
+                    const payload = {
+                        contents: [{ role: "user", parts: [{ text: prompt }] }]
+                    };
+                    
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (!response.ok) {
+                            throw new Error(`Erro da API: ${response.status}`);
+                        }
+                        const result = await response.json();
+
+                        if (result.candidates && result.candidates.length > 0 &&
+                            result.candidates[0].content && result.candidates[0].content.parts &&
+                            result.candidates[0].content.parts.length > 0) {
+                            const text = result.candidates[0].content.parts[0].text;
+                            if (geminiModalBody) geminiModalBody.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
+                        } else {
+                           if (geminiModalBody) geminiModalBody.innerHTML = '<p class="text-red-500">Desculpe, não foi possível gerar uma explicação para esta ilustração neste momento.</p>';
+                           console.error("Resposta da API inesperada:", result);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao contactar a API Gemini:', error);
+                        if (geminiModalBody) geminiModalBody.innerHTML = `<p class="text-red-500">Ocorreu um erro ao tentar obter a explicação. Por favor, tente novamente mais tarde. Detalhe: ${error.message}</p>`;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

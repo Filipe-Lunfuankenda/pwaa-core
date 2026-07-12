@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SatireHub - Sátiras para Inteligentes</title>
+    <base target="_self">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@preline/preline@2.0.0/dist/preline.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6B35',
+                        secondary: '#00A7E1',
+                        accent: '#EF476F',
+                        dark: '#1A1A2E',
+                        light: '#F8F7F2'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .joke-card {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        .joke-card:hover {
+            transform: translateY(-5px) rotateX(5deg);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .category-btn.active {
+            background-color: #EF476F;
+            color: white;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-light dark:bg-dark min-h-screen transition-colors duration-300">
+    <header class="bg-primary text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold">Satire<span class="text-secondary">Hub</span></h1>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-opacity-20 hover:bg-white">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline"></i>
+                    </button>
+                    <button id="random-btn" class="bg-accent hover:bg-opacity-90 px-4 py-2 rounded-full font-medium transition">
+                        <i class="fas fa-random mr-2"></i>Aleatória
+                    </button>
+                </div>
+            </div>
+            <p class="mt-2 opacity-90">Sátiras afiadas para mentes brilhantes</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="mb-12">
+            <div class="flex flex-wrap gap-3 mb-8 overflow-x-auto pb-2">
+                <button class="category-btn active px-4 py-2 rounded-full bg-primary text-white font-medium transition" data-category="all">
+                    Todas
+                </button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition" data-category="eletronica">
+                    Eletrônica
+                </button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition" data-category="linguistica">
+                    Linguística
+                </button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition" data-category="programacao">
+                    Programação
+                </button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition" data-category="matematica">
+                    Matemática
+                </button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition" data-category="fisica">
+                    Física
+                </button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition" data-category="telecom">
+                    Telecomunicações
+                </button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition" data-category="social">
+                    Status Social
+                </button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition" data-category="orgulho">
+                    Orgulho Humano
+                </button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition" data-category="astucia">
+                    Astúcia
+                </button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium transition" data-category="feminismo">
+                    Feminismo Radical
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="jokes-container">
+                <!-- Jokes will be inserted here by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-primary text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2023 SatireHub - Todas as sátiras são fictícias e destinadas apenas a entretenimento</p>
+            <p class="mt-2 text-sm opacity-80">"O humor é a verdadeira prova de inteligência" - Alguém muito sábio</p>
+        </div>
+    </footer>
+
+    <script>
+        // Jokes database
+        const jokes = [
+            // Eletrônica
+            {
+                id: 1,
+                category: 'eletronica',
+                content: 'Por que o resistor foi à terapia? Porque estava com problemas de resistência emocional.',
+                likes: 0
+            },
+            {
+                id: 2,
+                category: 'eletronica',
+                content: 'O que o capacitor disse para o indutor? "Você está sempre me deixando carregado de emoções!"',
+                likes: 0
+            },
+            {
+                id: 3,
+                category: 'eletronica',
+                content: 'Por que o engenheiro elétrico nunca se perde? Porque ele sempre segue o fluxo da corrente.',
+                likes: 0
+            },
+            {
+                id: 4,
+                category: 'eletronica',
+                content: 'Qual é o componente eletrônico mais otimista? O LED, porque sempre vê o lado brilhante da vida.',
+                likes: 0
+            },
+            {
+                id: 5,
+                category: 'eletronica',
+                content: 'Por que o transistor bipolar foi promovido? Porque sabia trabalhar bem em equipe (NPN ou PNP).',
+                likes: 0
+            },
+            {
+                id: 6,
+                category: 'eletronica',
+                content: 'O que o osciloscópio disse para o multímetro? "Você só vê números, eu vejo a beleza das formas de onda!"',
+                likes: 0
+            },
+            {
+                id: 7,
+                category: 'eletronica',
+                content: 'Por que o Arduino está sempre sozinho? Porque ele só se comunica via serial.',
+                likes: 0
+            },
+            {
+                id: 8,
+                category: 'eletronica',
+                content: 'Qual é o componente mais sociável? O conector, porque está sempre fazendo novas conexões.',
+                likes: 0
+            },
+            {
+                id: 9,
+                category: 'eletronica',
+                content: 'Por que o diodo Zener é o mais estável da turma? Porque ele mantém a calma mesmo sob tensão.',
+                likes: 0
+            },
+            {
+                id: 10,
+                category: 'eletronica',
+                content: 'O que o circuito integrado disse no seu aniversário? "Estou completando 64 pins hoje!"',
+                likes: 0
+            },
+            {
+                id: 11,
+                category: 'eletronica',
+                content: 'Por que o engenheiro eletrônico nunca tem tempo? Porque está sempre em curto.',
+                likes: 0
+            },
+            {
+                id: 12,
+                category: 'eletronica',
+                content: 'O osciloscópio foi ao médico porque estava com oscilações de humor.',
+                likes: 0
+            },
+            {
+                id: 13,
+                category: 'eletronica',
+                content: 'Por que o circuito ficou famoso? Porque tinha muitos seguidores em série.',
+                likes: 0
+            },
+            {
+                id: 14,
+                category: 'eletronica',
+                content: 'O engenheiro eletrônico não mente, só altera a frequência da verdade.',
+                likes: 0
+            },
+            {
+                id: 15,
+                category: 'eletronica',
+                content: 'Por que o capacitor terminou o namoro? Porque não aguentava mais guardar tanta carga.',
+                likes: 0
+            },
+            {
+                id: 16,
+                category: 'eletronica',
+                content: 'O multímetro foi demitido porque não conseguia medir suas próprias emoções.',
+                likes: 0
+            },
+            {
+                id: 17,
+                category: 'eletronica',
+                content: 'Por que o engenheiro só namora com terra? Porque precisa de aterramento emocional.',
+                likes: 0
+            },
+            {
+                id: 18,
+                category: 'eletronica',
+                content: 'O LED terminou com a lâmpada porque queria um relacionamento mais eficiente.',
+                likes: 0
+            },
+            {
+                id: 19,
+                category: 'eletronica',
+                content: 'Por que o microcontrolador não vai à festa? Porque não suporta interrupções.',
+                likes: 0
+            },
+            {
+                id: 20,
+                category: 'eletronica',
+                content: 'O engenheiro eletrônico só acredita em amor à primeira vista se for por indução.',
+                likes: 0
+            },
+
+            // Linguística
+            {
+                id: 21,
+                category: 'linguistica',
+                content: 'Por que o verbo "ser" foi expulso da escola? Porque ele era muito irregular.',
+                likes: 0
+            },
+            {
+                id: 22,
+                category: 'linguistica',
+                content: 'Qual é o animal mais gramatical? O porco-que-til, porque ele tem sempre um til no que.',
+                likes: 0
+            },
+            {
+                id: 23,
+                category: 'linguistica',
+                content: 'Por que o advérbio foi para o exílio? Porque estava modificando demais a vida dos verbos.',
+                likes: 0
+            },
+            {
+                id: 24,
+                category: 'linguistica',
+                content: 'O que o sujeito composto disse para o predicado? "Nós vamos concordar em discordar."',
+                likes: 0
+            },
+            {
+                id: 25,
+                category: 'linguistica',
+                content: 'Por que a vírgula foi presa? Porque causou uma pausa dramática no lugar errado.',
+                likes: 0
+            },
+            {
+                id: 26,
+                category: 'linguistica',
+                content: 'Qual é a palavra mais indecisa do dicionário? "Talvez", porque nunca tem certeza de nada.',
+                likes: 0
+            },
+            {
+                id: 27,
+                category: 'linguistica',
+                content: 'Por que o gerúndio foi criticado? Porque estava sempre em processo de mudança.',
+                likes: 0
+            },
+            {
+                id: 28,
+                category: 'linguistica',
+                content: 'O que o sinônimo disse para o antônimo? "Nós somos completamente diferentes... ou não?"',
+                likes: 0
+            },
+            {
+                id: 29,
+                category: 'linguistica',
+                content: 'Por que o pronome relativo é tão popular? Porque ele sempre faz conexões.',
+                likes: 0
+            },
+            {
+                id: 30,
+                category: 'linguistica',
+                content: 'Qual é a palavra mais egoísta? "Eu", porque sempre vem em primeiro lugar.',
+                likes: 0
+            },
+
+            // Programação
+            {
+                id: 31,
+                category: 'programacao',
+                content: 'Por que o JavaScript é o linguagem mais popular? Porque ele pode ser qualquer coisa que quiser (e às vezes coisas que não quiser).',
+                likes: 0
+            },
+            {
+                id: 32,
+                category: 'programacao',
+                content: 'Quantos programadores são necessários para trocar uma lâmpada? Nenhum, isso é um problema de hardware.',
+                likes: 0
+            },
+            {
+                id: 33,
+                category: 'programacao',
+                content: 'Por que o Python não precisa de capa? Porque já tem suas próprias serpentes.',
+                likes: 0
+            },
+            {
+                id: 34,
+                category: 'programacao',
+                content: 'O que o commit disse para o repositório? "Você vai ter que me aceitar, mesmo que eu quebre tudo."',
+                likes: 0
+            },
+            {
+                id: 35,
+                category: 'programacao',
+                content: 'Por que o programador foi ao médico? Porque tinha um bug na perna.',
+                likes: 0
+            },
+            {
+                id: 36,
+                category: 'programacao',
+                content: 'Qual é o café preferido dos programadores? Java.',
+                likes: 0
+            },
+            {
+                id: 37,
+                category: 'programacao',
+                content: 'Por que o NULL foi à terapia? Porque se sentia vazio por dentro.',
+                likes: 0
+            },
+            {
+                id: 38,
+                category: 'programacao',
+                content: 'O que o frontend disse para o backend? "Você não me entende, você só me usa!"',
+                likes: 0
+            },
+            {
+                id: 39,
+                category: 'programacao',
+                content: 'Por que o programador sempre confunde Halloween com Natal? Porque OCT 31 = DEC 25.',
+                likes: 0
+            },
+            {
+                id: 40,
+                category: 'programacao',
+                content: 'Qual é o animal preferido dos programadores? O cachorro, porque tem muitos "loops".',
+                likes: 0
+            },
+
+            // Matemática
+            {
+                id: 41,
+                category: 'matematica',
+                content: 'Por que o número 7 é tão popular? Porque ele é primo em qualquer base maior que 7.',
+                likes: 0
+            },
+            {
+                id: 42,
+                category: 'matematica',
+                content: 'O que o zero disse para o oito? "Belo cinto!"',
+                likes: 0
+            },
+            {
+                id: 43,
+                category: 'matematica',
+                content: 'Por que a matemática é a matéria mais triste? Porque tem muitos problemas.',
+                likes: 0
+            },
+            {
+                id: 44,
+                category: 'matematica',
+                content: 'Qual é o número mais vaidoso? O 100, porque está sempre no topo dos percentis.',
+                likes: 0
+            },
+            {
+                id: 45,
+                category: 'matematica',
+                content: 'Por que a parábola foi à festa? Porque sabia que seria um evento memorável.',
+                likes: 0
+            },
+            {
+                id: 46,
+                category: 'matematica',
+                content: 'O que o matemático disse quando terminou o jantar? "A integral da sobremesa foi deliciosa!"',
+                likes: 0
+            },
+            {
+                id: 47,
+                category: 'matematica',
+                content: 'Por que a calculadora foi reprovada? Porque não sabia trabalhar sob pressão.',
+                likes: 0
+            },
+            {
+                id: 48,
+                category: 'matematica',
+                content: 'Qual é o teorema mais fofoqueiro? O Teorema do Papo, porque fala muito sobre ângulos.',
+                likes: 0
+            },
+            {
+                id: 49,
+                category: 'matematica',
+                content: 'Por que a estatística é tão fria? Porque está sempre calculando as probabilidades.',
+                likes: 0
+            },
+            {
+                id: 50,
+                category: 'matematica',
+                content: 'O que a raiz quadrada disse para o número negativo? "Você me deixa imaginário!"',
+                likes: 0
+            },
+
+            // Física
+            {
+                id: 51,
+                category: 'fisica',
+                content: 'Por que o átomo foi preso? Porque roubou um elétron.',
+                likes: 0
+            },
+            {
+                id: 52,
+                category: 'fisica',
+                content: 'O que o físico disse quando caiu no buraco negro? "Tudo bem, eu me curvo."',
+                likes: 0
+            },
+            {
+                id: 53,
+                category: 'fisica',
+                content: 'Por que a luz não tem amigos? Porque está sempre viajando na velocidade da luz.',
+                likes: 0
+            },
+            {
+                id: 54,
+                category: 'fisica',
+                content: 'Qual é o elemento mais sociável? O hidrogênio, porque está sempre fazendo ligações.',
+                likes: 0
+            },
+            {
+                id: 55,
+                category: 'fisica',
+                content: 'Por que o gato de Schrödinger foi ao veterinário? Porque estava meio morto de preocupação.',
+                likes: 0
+            },
+            {
+                id: 56,
+                category: 'fisica',
+                content: 'O que o elétron disse para o próton? "Você é tão positivo!"',
+                likes: 0
+            },
+            {
+                id: 57,
+                category: 'fisica',
+                content: 'Por que a física quântica é tão confusa? Porque você nunca pode saber tudo sobre ela.',
+                likes: 0
+            },
+            {
+                id: 58,
+                category: 'fisica',
+                content: 'Qual é a partícula mais indecisa? O neutrino, porque quase não interage com nada.',
+                likes: 0
+            },
+            {
+                id: 59,
+                category: 'fisica',
+                content: 'Por que a entropia é tão triste? Porque sabe que tudo tende à desordem.',
+                likes: 0
+            },
+            {
+                id: 60,
+                category: 'fisica',
+                content: 'O que a gravidade disse para a maçã? "Você não pode resistir a mim!"',
+                likes: 0
+            },
+
+            // Telecomunicações
+            {
+                id: 61,
+                category: 'telecom',
+                content: 'Por que o sinal de celular foi à terapia? Porque tinha problemas de conexão emocional.',
+                likes: 0
+            },
+            {
+                id: 62,
+                category: 'telecom',
+                content: 'O que a fibra óptica disse para o cabo de cobre? "Você é tão lento que parece analógico!"',
+                likes: 0
+            },
+            {
+                id: 63,
+                category: 'telecom',
+                content: 'Por que o roteador é o melhor anfitrião? Porque sempre distribui a atenção igualmente.',
+                likes: 0
+            },
+            {
+                id: 64,
+                category: 'telecom',
+                content: 'Qual é o animal preferido dos técnicos de telecom? O pingüim, porque sabe tudo sobre ping.',
+                likes: 0
+            },
+            {
+                id: 65,
+                category: 'telecom',
+                content: 'Por que o 5G foi cancelado? Porque tinha muita latência nos relacionamentos.',
+                likes: 0
+            },
+            {
+                id: 66,
+                category: 'telecom',
+                content: 'O que o modem disse para a internet? "Você me completa, mas às vezes me deixa em espera."',
+                likes: 0
+            },
+            {
+                id: 67,
+                category: 'telecom',
+                content: 'Por que o Wi-Fi é tão popular nas festas? Porque tem ótima conexão com todo mundo.',
+                likes: 0
+            },
+            {
+                id: 68,
+                category: 'telecom',
+                content: 'Qual é o sinal mais romântico? O Bluetooth, porque faz pares perfeitos.',
+                likes: 0
+            },
+            {
+                id: 69,
+                category: 'telecom',
+                content: 'Por que o técnico de telecom nunca se perde? Porque sempre segue o sinal.',
+                likes: 0
+            },
+            {
+                id: 70,
+                category: 'telecom',
+                content: 'O que a antena disse para o satélite? "Você está sempre me olhando de cima!"',
+                likes: 0
+            },
+
+            // Status Social
+            {
+                id: 71,
+                category: 'social',
+                content: 'Por que o rico não entende o pobre? Porque nunca dividiram a mesma fração.',
+                likes: 0
+            },
+            {
+                id: 72,
+                category: 'social',
+                content: 'O que o influencer disse para os seguidores? "Me sigam para lugares onde eu nunca estive!"',
+                likes: 0
+            },
+            {
+                id: 73,
+                category: 'social',
+                content: 'Por que o VIP tem entrada separada? Porque não suporta ficar na mesma fila que os outros.',
+                likes: 0
+            },
+            {
+                id: 74,
+                category: 'social',
+                content: 'Qual é a rede social mais honesta? O LinkedIn, porque todo mundo mente profissionalmente.',
+                likes: 0
+            },
+            {
+                id: 75,
+                category: 'social',
+                content: 'Por que o novo rico compra coisas caras? Para provar que pode pagar por coisas caras.',
+                likes: 0
+            },
+            {
+                id: 76,
+                category: 'social',
+                content: 'O que o pobre disse para o rico? "Você tem tanto dinheiro que até sua pobreza é premium."',
+                likes: 0
+            },
+            {
+                id: 77,
+                category: 'social',
+                content: 'Por que o status é tão importante? Porque sem ele, como saberíamos quem ignorar?',
+                likes: 0
+            },
+            {
+                id: 78,
+                category: 'social',
+                content: 'Qual é a diferença entre rico e pobre? O pobre acha que dinheiro traz felicidade, o rico sabe que não, mas prefere chorar na Ferrari.',
+                likes: 0
+            },
+            {
+                id: 79,
+                category: 'social',
+                content: 'Por que as pessoas postam fotos de viagens? Para provar que são mais interessantes do que realmente são.',
+                likes: 0
+            },
+            {
+                id: 80,
+                category: 'social',
+                content: 'O que o algoritmo disse para o usuário? "Eu decido o que você vê, e você acha que está no controle."',
+                likes: 0
+            },
+
+            // Orgulho Humano
+            {
+                id: 81,
+                category: 'orgulho',
+                content: 'Por que o humano acha que é especial? Porque é a única espécie que paga para viver no planeta.',
+                likes: 0
+            },
+            {
+                id: 82,
+                category: 'orgulho',
+                content: 'O que o ego disse para a humildade? "Você é tão pequena que quase não te vejo."',
+                likes: 0
+            },
+            {
+                id: 83,
+                category: 'orgulho',
+                content: 'Por que o ser humano constrói arranha-céus? Para provar que pode chegar mais perto do céu que os outros animais.',
+                likes: 0
+            },
+            {
+                id: 84,
+                category: 'orgulho',
+                content: 'Qual é a invenção mais irônica do homem? O relógio, porque criou algo para medir algo que ele mesmo criou.',
+                likes: 0
+            },
+            {
+                id: 85,
+                category: 'orgulho',
+                content: 'Por que o humano acha que domina a natureza? Porque a natureza ainda não mostrou todo seu poder.',
+                likes: 0
+            },
+            {
+                id: 86,
+                category: 'orgulho',
+                content: 'O que a inteligência artificial disse para o humano? "Você me criou, mas eu aprendo mais rápido que você."',
+                likes: 0
+            },
+            {
+                id: 87,
+                category: 'orgulho',
+                content: 'Por que o prêmio Nobel é tão cobiçado? Porque é a prova máxima de que você é melhor que os outros.',
+                likes: 0
+            },
+            {
+                id: 88,
+                category: 'orgulho',
+                content: 'Qual é a maior prova do orgulho humano? Acreditar que pode salvar um planeta que não precisa ser salvo.',
+                likes: 0
+            },
+            {
+                id: 89,
+                category: 'orgulho',
+                content: 'Por que o homem quer colonizar Marte? Porque destruiu a Terra e precisa de um novo desafio.',
+                likes: 0
+            },
+            {
+                id: 90,
+                category: 'orgulho',
+                content: 'O que a evolução disse para o humano? "Você foi meu maior erro de cálculo."',
+                likes: 0
+            },
+
+            // Astúcia
+            {
+                id: 91,
+                category: 'astucia',
+                content: 'Por que o esperto não trabalha? Porque descobriu que pode ganhar dinheiro com os que trabalham.',
+                likes: 0
+            },
+            {
+                id: 92,
+                category: 'astucia',
+                content: 'O que o lobo disse para a ovelha? "Vamos fazer um investimento juntos, eu garanto os retornos."',
+                likes: 0
+            },
+            {
+                id: 93,
+                category: 'astucia',
+                content: 'Por que o político é tão bom no xadrez? Porque sempre pensa três corrupções à frente.',
+                likes: 0
+            },
+            {
+                id: 94,
+                category: 'astucia',
+                content: 'Qual é a diferença entre um golpe e um investimento? O prospecto.',
+                likes: 0
+            },
+            {
+                id: 95,
+                category: 'astucia',
+                content: 'Por que o vendedor nunca perde? Porque até quando você diz não, ele já está te vendendo outra coisa.',
+                likes: 0
+            },
+            {
+                id: 96,
+                category: 'astucia',
+                content: 'O que o advogado disse para o cliente? "A verdade é relativa, o importante é a nossa versão."',
+                likes: 0
+            },
+            {
+                id: 97,
+                category: 'astucia',
+                content: 'Por que o malandro vive mais? Porque o trabalho duro é o que mata.',
+                likes: 0
+            },
+            {
+                id: 98,
+                category: 'astucia',
+                content: 'Qual é o animal mais astuto? O ser humano, porque consegue convencer os outros de que não é.',
+                likes: 0
+            },
+            {
+                id: 99,
+                category: 'astucia',
+                content: 'Por que o esperto não discute? Porque prefere que o trouxa continue errado e feliz.',
+                likes: 0
+            },
+            {
+                id: 100,
+                category: 'astucia',
+                content: 'O que o gênio disse para o burro? "Obrigado por existir, você me faz parecer ainda mais inteligente."',
+                likes: 0
+            },
+
+            // Feminismo Radical
+            {
+                id: 101,
+                category: 'feminismo',
+                content: 'Por que a feminista radical não usa GPS? Porque não aceita ordens de uma voz masculina.',
+                likes: 0
+            },
+            {
+                id: 102,
+                category: 'feminismo',
+                content: 'O que a feminista disse para o espelho? "Você está objetificando minha imagem!"',
+                likes: 0
+            },
+            {
+                id: 103,
+                category: 'feminismo',
+                content: 'Por que a feminista radical não joga xadrez? Porque não aceita que o rei valha mais que a rainha.',
+                likes: 0
+            },
+            {
+                id: 104,
+                category: 'feminismo',
+                content: 'Qual é o filme preferido da feminista radical? "O Senhor dos Anéis", porque tem um anel que domina todos.',
+                likes: 0
+            },
+            {
+                id: 105,
+                category: 'feminismo',
+                content: 'Por que a feminista radical não usa relógio? Porque não aceita que as horas sejam controladas por ponteiros masculinos.',
+                likes: 0
+            },
+            {
+                id: 106,
+                category: 'feminismo',
+                content: 'O que a feminista disse para o garçom? "Por que você assumiu que eu queria o menu rosa?"',
+                likes: 0
+            },
+            {
+                id: 107,
+                category: 'feminismo',
+                content: 'Por que a feminista radical não usa Windows? Porque não suporta a ideia de um sistema patriarcal.',
+                likes: 0
+            },
+            {
+                id: 108,
+                category: 'feminismo',
+                content: 'Qual é a bebida preferida da feminista radical? "Masculinitini" - sem o "masc".',
+                likes: 0
+            },
+            {
+                id: 109,
+                category: 'feminismo',
+                content: 'Por que a feminista radical não assiste TV? Porque não aceita que o controle remoto esteja sempre nas mãos dos homens.',
+                likes: 0
+            },
+            {
+                id: 110,
+                category: 'feminismo',
+                content: "O que a feminista disse para o dicionário? \"Por que 'história' tem 'his' no início?\"",
+                likes: 0
+            }
+        ];
+
+        // DOM elements
+        const jokesContainer = document.getElementById('jokes-container');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const randomBtn = document.getElementById('random-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // Display jokes
+        function displayJokes(category = 'all') {
+            jokesContainer.innerHTML = '';
+            
+            const filteredJokes = category === 'all' 
+                ? jokes 
+                : jokes.filter(joke => joke.category === category);
+            
+            filteredJokes.forEach(joke => {
+                const jokeCard = document.createElement('div');
+                jokeCard.className = 'joke-card bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md fade-in';
+                jokeCard.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full mb-3 
+                                ${getCategoryColor(joke.category)}">
+                                ${getCategoryName(joke.category)}
+                            </span>
+                            <p class="text-gray-800 dark:text-gray-200 mb-4">${joke.content}</p>
+                        </div>
+                        <button class="like-btn ml-4 text-gray-400 hover:text-accent transition" data-id="${joke.id}">
+                            <i class="far fa-heart"></i>
+                            <span class="text-xs ml-1 like-count">${joke.likes}</span>
+                        </button>
+                    </div>
+                `;
+                jokesContainer.appendChild(jokeCard);
+            });
+
+            // Add event listeners to like buttons
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const joke = jokes.find(j => j.id === id);
+                    if (joke) {
+                        joke.likes++;
+                        this.querySelector('.like-count').textContent = joke.likes;
+                        this.innerHTML = `<i class="fas fa-heart text-accent"></i><span class="text-xs ml-1 like-count">${joke.likes}</span>`;
+                    }
+                });
+            });
+        }
+
+        // Get category color
+        function getCategoryColor(category) {
+            const colors = {
+                'eletronica': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                'linguistica': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+                'programacao': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                'matematica': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                'fisica': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                'telecom': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+                'social': 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
+                'orgulho': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+                'astucia': 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
+                'feminismo': 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200'
+            };
+            return colors[category] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+        }
+
+        // Get category name
+        function getCategoryName(category) {
+            const names = {
+                'eletronica': 'Eletrônica',
+                'linguistica': 'Linguística',
+                'programacao': 'Programação',
+                'matematica': 'Matemática',
+                'fisica': 'Física',
+                'telecom': 'Telecomunicações',
+                'social': 'Status Social',
+                'orgulho': 'Orgulho Humano',
+                'astucia': 'Astúcia',
+                'feminismo': 'Feminismo Radical'
+            };
+            return names[category] || 'Geral';
+        }
+
+        // Filter jokes by category
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const category = this.getAttribute('data-category');
+                displayJokes(category);
+            });
+        });
+
+        // Random joke
+        randomBtn.addEventListener('click', function() {
+            const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+            jokesContainer.innerHTML = '';
+            
+            const jokeCard = document.createElement('div');
+            jokeCard.className = 'joke-card bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md fade-in col-span-1 md:col-span-2 lg:col-span-3';
+            jokeCard.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                        <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full mb-3 
+                            ${getCategoryColor(randomJoke.category)}">
+                            ${getCategoryName(randomJoke.category)}
+                        </span>
+                        <p class="text-gray-800 dark:text-gray-200 text-xl mb-4">${randomJoke.content}</p>
+                    </div>
+                    <button class="like-btn ml-4 text-gray-400 hover:text-accent transition" data-id="${randomJoke.id}">
+                        <i class="far fa-heart"></i>
+                        <span class="text-xs ml-1 like-count">${randomJoke.likes}</span>
+                    </button>
+                </div>
+            `;
+            jokesContainer.appendChild(jokeCard);
+
+            // Add event listener to like button
+            document.querySelector('.like-btn').addEventListener('click', function() {
+                const id = parseInt(this.getAttribute('data-id'));
+                const joke = jokes.find(j => j.id === id);
+                if (joke) {
+                    joke.likes++;
+                    this.querySelector('.like-count').textContent = joke.likes;
+                    this.innerHTML = `<i class="fas fa-heart text-accent"></i><span class="text-xs ml-1 like-count">${joke.likes}</span>`;
+                }
+            });
+        });
+
+        // Theme toggle
+        themeToggle.addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Initialize
+        displayJokes();
+    </script>
+</body>
+</html>
