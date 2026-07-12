@@ -45,7 +45,6 @@ O **PWAA (Portable Web Application Archive)** é um padrão universal de arquiva
 
 * **Modo SCRAPE:** Funciona como um rastreador web (Web Crawler) utilizando o algoritmo Breadth-First Search. Descarrega sites recursivamente, reescreve a árvore DOM (convertendo caminhos absolutos em relativos) e gera um clone offline do portal.
 
----
 
 ## ⚖️ Conformidade Legal e Privacidade (RGPD, CCPA, UK-GDPR)
 
@@ -67,6 +66,12 @@ A retenção e análise de dados enquadra-se na posse física do dispositivo do 
 ### 4. Responsabilidade do Desenvolvedor (O Criador do Ficheiro)
 Embora o ecossistema PWAA garanta segurança local de nível militar contra rastreio cruzado:
 - Se empacotar num `.pwaa` chamadas ativas de Telemetria (como Google Analytics, Meta Pixels) que liguem à Internet, continua a ter a responsabilidade de requerer consentimento e providenciar Avisos de Privacidade no seio da interface gráfica, tal como num site normal.
+
+### 5. Cláusula de Extração (Web Scraping) e Direitos de Autor
+A ferramenta de clonagem embutida (`pwaa-builder scrape`) foi criada com o propósito de facilitar a preservação digital, acesso a documentação open-source offline e uso pessoal educativo (Fair Use / Uso Justo).
+- **Termos de Serviço (ToS):** O utilizador compromete-se a não utilizar a ferramenta de extração em sites cujos Termos de Serviço proíbam expressamente o *scraping* automático.
+- **Propriedade Intelectual:** O código, design (UI/UX) e *assets* clonados continuam a pertencer de forma integral e inalienável aos seus criadores e entidades detentoras dos Direitos de Autor originais. A revenda, re-empacotamento sob nova marca ou distribuição pública não autorizada de sites inteiros na forma de ficheiros `.pwaa` constitui uma grave violação de Copyright.
+- **Isenção de Responsabilidade:** Os autores e mantenedores do formato PWAA fornecem a infraestrutura de extração estritamente como uma ferramenta neutra de desenvolvimento, declinando qualquer responsabilidade legal, cível ou criminal pelo uso ilícito da mesma por parte de terceiros em violação das leis de Propriedade Intelectual de qualquer jurisdição.
 
 ---
 
@@ -117,7 +122,6 @@ The **PWAA (Portable Web Application Archive)** is a universal archiving standar
 
 * **SCRAPE Mode:** Acts as a recursive Web Crawler utilizing a Breadth-First Search algorithm. It downloads websites, rewrites the DOM tree (converting absolute paths to relative ones), and generates a fully offline clone of the portal.
 
----
 
 ## ⚖️ Legal Compliance & Privacy (GDPR, CCPA, UK-GDPR)
 
@@ -138,4 +142,10 @@ Data retention and analysis falls under the physical possession of the user's de
 
 ### 4. Developer's Responsibility (The File Creator)
 While the PWAA ecosystem ensures military-grade local security against cross-tracking:
-- If you package in a '.pwaa' active Telemetry calls (such as Google Analytics, Meta Pixels) that connect to the Internet, you are still responsible for requesting consent and providing Privacy Notices within the graphical interface, just as on a normal website.
+- If you package in a `.pwaa` active Telemetry calls (such as Google Analytics, Meta Pixels) that connect to the Internet, you are still responsible for requesting consent and providing Privacy Notices within the graphical interface, just as on a normal website.
+
+### 5. Web Scraping Clause and Copyright
+The built-in cloning tool ('pwaa-builder scrape') was created with the purpose of facilitating digital preservation, access to offline open-source documentation, and educational personal use (Fair Use).
+- **Terms of Service (ToS):** The user undertakes not to use the extraction tool on websites whose Terms of Service expressly prohibit  automatic scraping.
+- **Intellectual Property:** The cloned code, design (UI/UX) and assets remain wholly and inalienably owned by their creators and original copyright holders. The resale, re-branding, or unauthorized public distribution of entire websites in the form of .pwaa files constitutes a serious copyright violation.
+- **Disclaimer:** The authors and maintainers of the PWAA format provide the extraction infrastructure strictly as a neutral development tool, declining any legal, civil or criminal liability for the illicit use of it by third parties in violation of the Intellectual Property laws of any jurisdiction.
