@@ -74,7 +74,7 @@ A ferramenta de clonagem embutida (`pwaa-builder scrape`) foi criada com o prop�
 - **Isenção de Responsabilidade:** Os autores e mantenedores do formato PWAA fornecem a infraestrutura de extração estritamente como uma ferramenta neutra de desenvolvimento, declinando qualquer responsabilidade legal, cível ou criminal pelo uso ilícito da mesma por parte de terceiros em violação das leis de Propriedade Intelectual de qualquer jurisdição.
 
 
-👉 [**Lê o Guia de Instalação e Comandos Completos na Documentação do SDK**](https://github.com/Filipe-Lunfuankenda/pwaa-core/sdk/SDK_README.md)
+👉 [**Lê o Guia de Instalação e Comandos Completos na Documentação do SDK**](https://github.com/Filipe-Lunfuankenda/pwaa-core/blob/main/sdk/SDK_README.md)
 
 ---
 
@@ -154,4 +154,4 @@ The built-in cloning tool ('pwaa-builder scrape') was created with the purpose o
 - **Disclaimer:** The authors and maintainers of the PWAA format provide the extraction infrastructure strictly as a neutral development tool, declining any legal, civil or criminal liability for the illicit use of it by third parties in violation of the Intellectual Property laws of any jurisdiction.
 
 
-👉 [**Read the Installation Guide and Full Commands in the SDK Documentation**](https://github.com/Filipe-Lunfuankenda/pwaa-core/sdk/SDK_README.md)
+👉 [**Read the Installation Guide and Full Commands in the SDK Documentation**](https://github.com/Filipe-Lunfuankenda/pwaa-core/blob/main/sdk/SDK_README.md)
