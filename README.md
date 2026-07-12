@@ -73,6 +73,9 @@ A ferramenta de clonagem embutida (`pwaa-builder scrape`) foi criada com o prop�
 - **Propriedade Intelectual:** O código, design (UI/UX) e *assets* clonados continuam a pertencer de forma integral e inalienável aos seus criadores e entidades detentoras dos Direitos de Autor originais. A revenda, re-empacotamento sob nova marca ou distribuição pública não autorizada de sites inteiros na forma de ficheiros `.pwaa` constitui uma grave violação de Copyright.
 - **Isenção de Responsabilidade:** Os autores e mantenedores do formato PWAA fornecem a infraestrutura de extração estritamente como uma ferramenta neutra de desenvolvimento, declinando qualquer responsabilidade legal, cível ou criminal pelo uso ilícito da mesma por parte de terceiros em violação das leis de Propriedade Intelectual de qualquer jurisdição.
 
+
+👉 [**Lê o Guia de Instalação e Comandos Completos na Documentação do SDK**](https://github.com/Filipe-Lunfuankenda/pwaa-core/sdk/SDK_README.md)
+
 ---
 
 ### 🇬🇧 What is the PWAA Format? (English)
@@ -149,3 +152,6 @@ The built-in cloning tool ('pwaa-builder scrape') was created with the purpose o
 - **Terms of Service (ToS):** The user undertakes not to use the extraction tool on websites whose Terms of Service expressly prohibit  automatic scraping.
 - **Intellectual Property:** The cloned code, design (UI/UX) and assets remain wholly and inalienably owned by their creators and original copyright holders. The resale, re-branding, or unauthorized public distribution of entire websites in the form of .pwaa files constitutes a serious copyright violation.
 - **Disclaimer:** The authors and maintainers of the PWAA format provide the extraction infrastructure strictly as a neutral development tool, declining any legal, civil or criminal liability for the illicit use of it by third parties in violation of the Intellectual Property laws of any jurisdiction.
+
+
+👉 [**Read the Installation Guide and Full Commands in the SDK Documentation**](https://github.com/Filipe-Lunfuankenda/pwaa-core/sdk/SDK_README.md)
