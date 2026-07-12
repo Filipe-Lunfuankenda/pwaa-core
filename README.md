@@ -1,97 +1,99 @@
-### 🇵🇹 O que é o Formato PWAA? (Português)
 
-O **PWAA (Portable Web Application Archive)** é um padrão universal de arquivamento desenhado para encapsular e distribuir aplicações web completas, manuais e sites num único ficheiro que funciona 100% offline. Ele liberta aplicações complexas da dependência de servidores na nuvem, permitindo que corram nativamente em qualquer máquina com total interatividade.
+1. **`pwaa-builder.exe`** (O Motor de Criação)
+   Ferramenta de linha de comandos (CLI) que converte código web, frameworks ou URLs online para o formato PWAA. Pode ser invocado de forma programática pelo seu software.
+   - Uso básico: `pwaa-builder pack ./pasta -o ficheiro.pwaa`
+   - Scrape recursivo: `pwaa-builder scrape https://exemplo.com -o site.pwaa`
+   - Build universal: `pwaa-builder build ./meu-projeto -o app.pwaa`
 
-**Arquitetura do Ficheiro:**
+2. **`pwaareader.exe`** (O Motor de Renderização Oficial)
+   Um leitor ultra-leve com aceleração HiDPI e servidor HTTP virtualizado In-Memory. Permite a reprodução instantânea dos ficheiros.
 
-* A nível binário, um ficheiro `.pwaa` é um contentor compatível com a norma PKZIP.
-
-
-* O formato utiliza compressão Store (0x00) para máxima velocidade de acesso ou Deflate (0x08) para compressão de texto.
-
-
-* Exige obrigatoriamente a presença de um ficheiro `index.html` na raiz do diretório interno para ser considerado válido.
-
-
-
-**Motor de Leitura e Renderização:**
-
-* **Virtualização In-Memory (Zero-Leak):** O leitor nunca extrai os ficheiros para o disco rígido, mapeando o conteúdo do ZIP diretamente para a memória RAM. Isto garante segurança corporativa e apaga qualquer rasto (cookies, cache) assim que a janela é fechada.
-
-
-* **Servidor HTTP Local:** Para contornar as severas restrições CORS dos navegadores, o leitor levanta um micro-servidor efêmero (`127.0.0.1`), fazendo com que o código web acredite estar alojado online.
-
-
-* **SPA Fallback:** Se a aplicação web pedir um ficheiro inexistente (como uma rota virtual do React ou Vue), o servidor devolve instantaneamente os bytes do `index.html`, garantindo que o *routing* moderno funciona perfeitamente offline.
-
-
-* **RAM-Buffering para Multimédia:** Resolve os erros HTTP 416 (Range Not Satisfiable) alocando vídeos diretamente na RAM, permitindo saltos instantâneos (*scrubbing*) na reprodução de media pesada.
-
-
-* **Sandboxing de Links:** Um script injetado globalmente interceta hiperligações externas (`https://`) e força a sua abertura no navegador padrão do sistema operativo, mantendo a janela do PWAA isolada e segura.
-
-
-* **Aceleração HiDPI:** No Windows, o leitor declara-se como `SetProcessDPIAware` diretamente à API do sistema, garantindo nitidez absoluta em ecrãs de alta resolução.
-
-
-
-**Motor de Criação (PWAA Builder):**
-
-* **Modo PACK:** Empacota pastas web estáticas tradicionais aplicando as assinaturas binárias do PWAA.
-
-
-* **Modo BUILD:** Deteta a tecnologia do projeto (Next.js, React, ASP.NET), instala dependências automaticamente, compila o código para produção e arquiva a pasta de saída correta.
-
-
-* **Modo SCRAPE:** Funciona como um rastreador web (Web Crawler) utilizando o algoritmo Breadth-First Search. Descarrega sites recursivamente, reescreve a árvore DOM (convertendo caminhos absolutos em relativos) e gera um clone offline do portal.
-
-
+3. **`PWAA_DOCUMENTATION.md`** (O Whitepaper Oficial)
+   A especificação de alto nível do PWAA, detalhando toda a engenharia por trás do formato.
 
 ---
 
-### 🇬🇧 What is the PWAA Format? (English)
+## Como Criar o Seu Próprio Visualizador PWAA Nativo
 
-The **PWAA (Portable Web Application Archive)** is a universal archiving standard designed to encapsulate and distribute complete web applications, manuals, and websites within a single file that operates 100% offline. It frees complex applications from cloud server dependency, allowing them to run natively on any machine while retaining full interactivity.
+Caso não pretenda utilizar o nosso `pwaareader.exe` e queira **embutir o suporte PWAA diretamente no seu próprio programa, browser ou firmware**, o processo é incrivelmente simples, pois o PWAA foi desenhado para ser universal.
 
-**File Architecture:**
+Para ler e apresentar um ficheiro `.pwaa` nativamente em qualquer linguagem (C++, Rust, Python, C#), o seu software deve seguir estes **3 passos arquitetónicos**:
 
-* At the binary level, a `.pwaa` file is a container fully compatible with the PKZIP standard.
+### Passo 1: Descompactação Virtual (In-Memory)
+Um ficheiro `.pwaa` é estruturalmente um ficheiro ZIP. 
+O seu software **não deve** extrair os ficheiros para o disco rígido (por questões de segurança e velocidade). Em vez disso, utilize uma biblioteca de ZIP da sua linguagem para mapear o conteúdo do ficheiro diretamente para a Memória RAM.
 
+### Passo 2: O Canal de Comunicação (Mini-Servidor ou Esquema Customizado)
+Como os motores web (WebViews, Chromium, WebKit) bloqueiam scripts em ficheiros locais (`file:///`), tem duas opções para alimentar o HTML ao ecrã:
 
-* The format utilizes Store compression (0x00) for maximum access speed or Deflate (0x08) for text compression.
+- **Opção A (A mais fácil - HTTP Localhost):** O seu programa levanta um mini-servidor HTTP local (`127.0.0.1`) numa porta aleatória (ex: 50431). Sempre que o servidor receber um pedido `/foto.png`, o seu código vai à RAM (ao ZIP), lê a `foto.png` e devolve-a ao browser.
+- **Opção B (A mais nativa - Custom Protocol):** Se estiver a usar WebViews modernas (como WebView2 em C# ou C++), pode registar um protocolo customizado (ex: `pwaa://`). Sempre que a WebView pedir `pwaa://app/index.html`, o seu código intercepta o pedido nativamente, lê os bytes do ZIP na memória e atira-os para o ecrã.
 
+### Passo 3: Regras de Ouro da Renderização
+Para que a sua implementação seja 100% compatível com a norma PWAA, deve assegurar:
+1. **SPA Fallback:** Se a WebView pedir um ficheiro que não existe no ZIP (ex: `/contactos`), o seu servidor não deve devolver o Erro 404, mas sim devolver os bytes do `index.html`. Isto permite que frameworks como o React funcionem offline!
+2. **Streaming de Vídeo (HTTP 416):** Para suportar vídeos, o seu leitor deve suportar "Range Requests" (saltar blocos de bytes do vídeo). Aloque o ficheiro de vídeo para um "Buffer" na memória RAM antes de o enviar.
+3. **Mime Types:** Garanta que a sua resposta HTTP contém as cabeçalhas corretas (ex: `.js` tem de devolver `application/javascript`, caso contrário o browser rejeita-o).
+4. **Isolamento de Links:** Injete um script (JavaScript) na WebView que impeça os utilizadores de abrirem links de internet (`https://`) dentro do Leitor PWAA. Links externos devem ser empurrados para o browser padrão do sistema.
+5. **Garantia de Zero Fugas (Anti-Leak):** Motores WebView tendem a gravar cookies, localStorage e caches localmente por defeito. Qualquer Leitor PWAA deve, obrigatoriamente, ser instanciado a apontar para uma "Pasta Temporária de Sessão" (na RAM ou Temp) e eliminá-la ativamente no exato milissegundo em que a janela do Leitor for fechada, não deixando nenhum rastro para trás após a visualização.
+6. **Graceful Fallback:** Caso a máquina onde está a correr não tenha motores WebView instalados (ex: falta de Chromium/WebKit), o Leitor não deve "crashar" silenciosamente. Deve instanciar um alerta visual informando o utilizador que lhe falta o "WebView Runtime" e idealmente atirar o utilizador para a página oficial de download.
 
-* It strictly requires the presence of an `index.html` file at the root of its internal directory to be considered a valid archive.
+Seguindo estes 3 passos, **qualquer software ou firmware no mundo** pode tornar-se num leitor nativo do formato `.pwaa`!
 
+### O mistério do "Comando não reconhecido"
+O terminal do Windows (PowerShell) tem uma medida de segurança muito chata: ele recusa-se a correr executáveis apenas pelo nome se eles não estiverem instalados nas entranhas do sistema (ao contrário dos comandos normais como `cd` ou `git`).
 
+Para dizeres ao Windows *"Quero correr o programa que está exatamente aqui na minha frente"*, tens obrigatoriamente de colocar um ponto e uma barra (**`.\`**) antes do nome!
 
-**Reading and Rendering Engine:**
+Aqui tens a tua "Cábula" definitiva com os comandos exatos que deves usar na raiz do teu projeto. Copia e cola-os para ver a magia a acontecer:
 
-* **In-Memory Virtualization (Zero-Leak):** The reader never extracts files to the local hard drive, mapping the ZIP contents directly into RAM instead. This ensures corporate security and wipes all traces (cookies, cache) the exact millisecond the window is closed.
+#### 1. Para abrir/ler um ficheiro PWAA
+Se tiveres um ficheiro chamado `projeto.pwaa` na tua pasta, abres o Leitor assim:
+```powershell
+.\sdk\pwaareader.exe projeto.pwaa
+```
 
+#### 2. Converter uma pasta Web simples (Modo Pack)
+Pega numa pasta onde programaste HTML/CSS puro (por exemplo a pasta `sites/nanovisio`) e empacota-a de forma instantânea:
+```powershell
+.\sdk\pwaa-builder.exe pack .\sites\nanovisio -o nanovisio.pwaa
+```
 
-* **Local HTTP Server:** To bypass strict browser CORS restrictions, the reader spins up an ephemeral micro-server (`127.0.0.1`), tricking the web code into behaving as if it were hosted online.
+#### 3. Converter um projeto complexo (Modo Build - React/Vue/Node)
+Se estiveres numa pasta com ficheiros cruéis cheios de dependências (`package.json`), o builder instala tudo, compila para código limpo de produção e arquiva:
+```powershell
+.\sdk\pwaa-builder.exe build .\A_TUA_PASTA_REACT -o app-moderna.pwaa
+```
 
+#### 4. Clonar um Site da Internet (Modo Scrape)
+Para sacares todo um site que está na nuvem e imortalizá-lo offline num formato `.pwaa`:
+```powershell
+.\sdk\pwaa-builder.exe scrape https://exemplo.com -o copia-online.pwaa
+```
 
-* **SPA Fallback:** If the web application requests a non-existent file (such as a React or Vue virtual route), the server instantly returns the `index.html` bytes, ensuring modern routing works flawlessly offline.
+A única diferença entre os comandos dos manuais e o teu terminal foi o facto de o Windows exigir que declares o caminho rigoroso do EXE (ou seja `.\sdk\pwaa-builder.exe`). Se quiseres, no futuro podemos adicionar o SDK às Variáveis de Ambiente do teu computador, e aí sim poderás escrever apenas `pwaa-builder` a partir de qualquer pasta do Windows!
 
+---
 
-* **RAM-Buffering for Multimedia:** Solves HTTP 416 (Range Not Satisfiable) errors by allocating video files directly into RAM, enabling instant playback scrubbing for heavy media.
+## ⚖️ Conformidade Legal e Privacidade (RGPD, CCPA, UK-GDPR)
 
+Como o formato `.pwaa` executa aplicações web num ambiente nativo offline, ele introduz um paradigma único de isolamento e privacidade de dados. Este formato e os respetivos leitores oficiais foram desenhados com a filosofia de **"Privacy by Design"** (Privacidade desde a Conceção), garantindo conformidade natural com as leis de dados globais, nomeadamente o **Regulamento Geral sobre a Proteção de Dados (RGPD)** da União Europeia, as leis do Reino Unido (UK-GDPR) e da América do Norte (ex: CCPA/CPRA).
 
-* **Link Sandboxing:** A globally injected script intercepts external hyperlinks (`https://`) and forces them to open in the operating system's default browser, keeping the PWAA window strictly isolated and secure.
+### 1. Garantia Zero-Leak (Isolamento Total de Dados)
+A regra de ouro da arquitetura do SDK exige que qualquer Leitor `.pwaa` isole a sua execução numa **Sandbox Efémera** (RAM ou Pasta Temporária Volátil). Assim que o ficheiro `.pwaa` é encerrado, **todos os cookies, localStorage, IndexedDB, caches e dados de sessão gerados pela visualização são instantaneamente obliterados pelo sistema operativo.**
+Nenhum dado comportamental ou estado do utilizador sobrevive ao fecho da janela do leitor.
 
+### 2. Isenção de Consentimento de Cookies
+Devido ao mecanismo Zero-Leak, qualquer cookie que uma página `.pwaa` tente instalar (mesmo que estritamente não essencial) é tratado como um "Cookie de Sessão Volátil isolado". Como o Leitor destrói o rasto local após o encerramento, e operando 100% offline, **o armazenamento não interage de forma persistente com o equipamento terminal do utilizador**. Isto atenua drasticamente os requisitos punitivos da Diretiva ePrivacy (Lei dos Cookies da UE).
 
-* **HiDPI Acceleration:** On Windows, the reader explicitly declares itself as `SetProcessDPIAware` directly to the system API, guaranteeing absolute visual sharpness on high-resolution displays.
+### 3. Transferência de Dados Transfronteiriça (Offline-First)
+Um ficheiro `.pwaa` roda o seu próprio servidor local (`127.0.0.1`). Em páginas estáticas e documentações:
+- O processamento é inteiramente local (Edge Computing no próprio aparelho).
+- Não há partilha passiva de endereços de IP com CDNs externos ou Analytics a terceiros, exceto quando explicitamente interage com chamadas de rede dinâmicas programadas pelo criador do `.pwaa`.
+A retenção e análise de dados enquadra-se na posse física do dispositivo do utilizador, dispensando complexos Modelos de Transferência de Dados (Standard Contractual Clauses) exigidos pela UE para os EUA/UK.
 
+### 4. Responsabilidade do Desenvolvedor (O Criador do Ficheiro)
+Embora o ecossistema PWAA garanta segurança local de nível militar contra rastreio cruzado:
+- Se empacotar num `.pwaa` chamadas ativas de Telemetria (como Google Analytics, Meta Pixels) que liguem à Internet, continua a ter a responsabilidade de requerer consentimento e providenciar Avisos de Privacidade no seio da interface gráfica, tal como num site normal.
 
-
-**Creation Engine (PWAA Builder):**
-
-* **PACK Mode:** Packages traditional static web folders by applying the PWAA binary signatures.
-
-
-* **BUILD Mode:** Detects the project's underlying technology (Next.js, React, ASP.NET), automatically installs dependencies, compiles the code for production, and archives the correct output folder.
-
-
-* **SCRAPE Mode:** Acts as a recursive Web Crawler utilizing a Breadth-First Search algorithm. It downloads websites, rewrites the DOM tree (converting absolute paths to relative ones), and generates a fully offline clone of the portal.
+*(PWAA Padrão Oficial - Construído para a era Offline)*
