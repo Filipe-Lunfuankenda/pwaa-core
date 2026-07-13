@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B132B" />
+      <stop offset="100%" stop-color="#1C2541" />
+    </linearGradient>
+
+    <!-- Logo Gradient (Electric Cyan to Purple) -->
+    <linearGradient id="logoGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00F2FE" />
+      <stop offset="100%" stop-color="#4FACFE" />
+    </linearGradient>
+
+    <!-- Soft Glow -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#bgGrad)" rx="50" />
+
+  <!-- Cube/Box base (The Archive) -->
+  <g transform="translate(250, 230)" filter="url(#glow)">
+    <!-- Left face of the cube -->
+    <path d="M 0 20 L -80 -25 L -80 -105 L 0 -60 Z" fill="url(#logoGrad)" opacity="0.8"/>
+    <!-- Right face of the cube -->
+    <path d="M 0 20 L 80 -25 L 80 -105 L 0 -60 Z" fill="url(#logoGrad)" opacity="0.6"/>
+    <!-- Top face representing the Web (The open lid) -->
+    <path d="M 0 -60 L -80 -105 L 0 -150 L 80 -105 Z" fill="none" stroke="#00F2FE" stroke-width="8" stroke-linejoin="round"/>
+    
+    <!-- Code Brackets '< / >' emerging from the box -->
+    <text x="-40" y="-30" font-family="monospace" font-weight="900" font-size="40" fill="#FFFFFF" opacity="0.9" transform="skewY(30)">&lt;</text>
+    <text x="5" y="-60" font-family="monospace" font-weight="900" font-size="40" fill="#FFFFFF" opacity="0.9" transform="skewY(-30)">&gt;</text>
+    <path d="M -15 -35 L 15 -105" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" />
+  </g>
+
+  <!-- PWAA Text -->
+  <text x="250" y="380" font-family="'Inter', 'Segoe UI', sans-serif" font-weight="800" font-size="56" fill="#FFFFFF" text-anchor="middle" letter-spacing="4">PWAA</text>
+  <text x="250" y="420" font-family="'Inter', 'Segoe UI', sans-serif" font-weight="400" font-size="16" fill="#8D99AE" text-anchor="middle" letter-spacing="2">PORTABLE WEB APP ARCHIVE</text>
+</svg>

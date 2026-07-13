@@ -4,57 +4,57 @@
 ---
 
 ## ÍNDICE GERAL
-1. **Introdução e Filosofia**
-   1.1. O Desafio Histórico do Arquivamento Web
-   1.2. O Paradigma do PWAA
-   1.3. O Fim da Dependência da Nuvem
-   1.4. Objetivos Primários do Formato
-2. **Especificações de Estrutura do Ficheiro (.pwaa)**
-   2.1. O Contentor Binário (Norma PKZIP)
-   2.2. Algoritmos de Compressão Admissíveis
-   2.3. Estrutura de Diretórios e Regras de Topologia
-   2.4. Pontos de Montagem (Entrypoints)
-   2.5. Assinaturas MIME e Magic Bytes
-3. **O Motor de Leitura (PWAA Reader)**
-   3.1. Arquitetura de Virtualização de Memória (VFS)
-   3.2. Servidor HTTP In-Memory
-   3.3. Algoritmo de "SPA Fallback" (React, Next.js, Vue)
-   3.4. Resolução de Range Requests (HTTP 416) para Multimédia
-   3.5. Aceleração Gráfica e Alta Resolução (DPI Awareness)
-   3.6. Segurança, Sandboxing e Trapping de Links Externos
-4. **O Motor de Construção (PWAA Builder)**
-   4.1. Filosofia de Agnosticidade
-   4.2. O Modo PACK (Empacotamento Raw)
-   4.3. O Modo BUILD (Compilação Nativa Multi-Framework)
-   4.4. O Modo SCRAPE (Web Crawler Recursivo Inteligente)
-5. **Algoritmos Avançados do Ecossistema**
-   5.1. Breadth-First Search no Scraper
-   5.2. Mutação DOM e Reescrita de Árvore (Offline Mapping)
-   5.3. Interceção de Protocolos de Rede
-6. **Integrações e Casos de Uso Industriais**
-   6.1. E-Learning em Ambientes Isolados
-   6.2. Documentação Técnica Descentralizada
-   6.3. Relatórios Médicos Privados e Dashboards Financeiros
-   6.4. Distribuição P2P de Projetos
-7. **Comparativo Técnico Rigoroso**
-   7.1. PWAA vs PDF
-   7.2. PWAA vs EPUB
-   7.3. PWAA vs XPS / CHM
-   7.4. PWAA vs Executáveis Electron/Tauri
-8. **Referência Oficial de Comandos (CLI)**
-   8.1. Parâmetros e Opções do Builder
-   8.2. Variáveis de Ambiente Suportadas
-   8.3. Códigos de Saída (Exit Codes)
-9. **Guia de Resolução de Problemas (Troubleshooting)**
-   9.1. Erros Críticos de Parsing
-   9.2. Problemas de Assinatura Mime-Type
-   9.3. Anomalias de Playback e Buffering
-10. **Especificações Binárias (Apêndice para Desenvolvedores)**
-    10.1. Central Directory File Header
-    10.2. Regras de Checksum e Criptografia
-    10.3. Requisitos para Implementação de Leitores de Terceiros
-11. **Roteiro de Futuro (Roadmap)**
-12. **Perguntas Frequentes Exaustivas (Mega-FAQ)**
+1. **[Introdução e Filosofia](#1-introdução-e-filosofia)**
+   - [1.1. O Desafio Histórico do Arquivamento Web](#11-o-desafio-histórico-do-arquivamento-web)
+   - [1.2. O Paradigma do PWAA](#12-o-paradigma-do-pwaa)
+   - [1.3. O Fim da Dependência da Nuvem](#13-o-fim-da-dependência-da-nuvem)
+   - [1.4. Objetivos Primários do Formato](#14-objetivos-primários-do-formato)
+2. **[Especificações de Estrutura do Ficheiro (.pwaa)](#2-especificações-de-estrutura-do-ficheiro-pwaa)**
+   - [2.1. O Contentor Binário (Norma PKZIP)](#21-o-contentor-binário-norma-pkzip)
+   - [2.2. Algoritmos de Compressão Admissíveis](#22-algoritmos-de-compressão-admissíveis)
+   - [2.3. Estrutura de Diretórios e Regras de Topologia](#23-estrutura-de-diretórios-e-regras-de-topologia)
+   - [2.4. Pontos de Montagem (Entrypoints)](#24-pontos-de-montagem-entrypoints)
+   - [2.5. Assinaturas MIME e Magic Bytes](#25-assinaturas-mime-e-magic-bytes)
+3. **[O Motor de Leitura (PWAA Reader)](#3-o-motor-de-leitura-pwaa-reader)**
+   - [3.1. Arquitetura de Virtualização de Memória (VFS)](#31-arquitetura-de-virtualização-de-memória-vfs)
+   - [3.2. Servidor HTTP In-Memory](#32-servidor-http-in-memory)
+   - [3.3. Algoritmo de "SPA Fallback"](#33-algoritmo-de-spa-fallback-a-magia-do-react-vue-next)
+   - [3.4. Resolução de Range Requests (HTTP 416)](#34-resolução-de-range-requests-http-416-para-multimédia)
+   - [3.5. Aceleração Gráfica e Alta Resolução](#35-aceleração-gráfica-e-alta-resolução-dpi-awareness)
+   - [3.6. Segurança, Sandboxing e Trapping](#36-segurança-sandboxing-e-trapping-de-links-externos)
+4. **[O Motor de Construção (PWAA Builder)](#4-o-motor-de-construção-pwaa-builder)**
+   - [4.1. Filosofia de Agnosticidade](#41-filosofia-de-agnosticidade)
+   - [4.2. O Modo PACK](#42-o-modo-pack-empacotamento-raw)
+   - [4.3. O Modo BUILD](#43-o-modo-build-compilação-nativa-multi-framework)
+   - [4.4. O Modo SCRAPE](#44-o-modo-scrape-web-crawler-recursivo-inteligente)
+5. **[Algoritmos Avançados do Ecossistema](#5-algoritmos-avançados-do-ecossistema)**
+   - [5.1. Breadth-First Search no Scraper](#51-breadth-first-search-no-scraper)
+   - [5.2. Mutação DOM e Reescrita de Árvore](#52-mutação-dom-e-reescrita-de-árvore-offline-mapping)
+   - [5.3. Interceção de Protocolos de Rede](#53-interceção-de-protocolos-de-rede)
+6. **[Integrações e Casos de Uso Industriais](#6-integrações-e-casos-de-uso-industriais)**
+   - [6.1. E-Learning em Ambientes Isolados](#61-e-learning-em-ambientes-isolados)
+   - [6.2. Documentação Técnica Descentralizada](#62-documentação-técnica-descentralizada)
+   - [6.3. Relatórios Médicos Privados e Dashboards](#63-relatórios-médicos-privados-e-dashboards-financeiros)
+   - [6.4. Distribuição P2P de Projetos](#64-distribuição-p2p-de-projetos)
+7. **[Comparativo Técnico Rigoroso](#7-comparativo-técnico-rigoroso)**
+   - [7.1. PWAA vs PDF](#71-pwaa-vs-pdf-portable-document-format)
+   - [7.2. PWAA vs EPUB](#72-pwaa-vs-epub)
+   - [7.3. PWAA vs XPS / CHM](#73-pwaa-vs-xps--chm)
+   - [7.4. PWAA vs Executáveis Electron/Tauri](#74-pwaa-vs-executáveis-electrontauri)
+8. **[Referência Oficial de Comandos (CLI)](#8-referência-oficial-de-comandos-cli)**
+   - [8.1. Parâmetros e Opções do Builder](#81-parâmetros-e-opções-do-builder)
+   - [8.2. Variáveis e Comportamento Adicional](#82-variáveis-e-comportamento-adicional)
+   - [8.3. Códigos de Saída (Exit Codes)](#83-códigos-de-saída-exit-codes)
+9. **[Guia de Resolução de Problemas](#9-guia-de-resolução-de-problemas-troubleshooting)**
+   - [9.1. Erros Críticos de Parsing](#91-erros-críticos-de-parsing)
+   - [9.2. Problemas de Assinatura Mime-Type](#92-problemas-de-assinatura-mime-type)
+   - [9.3. Anomalias de Playback e Buffering](#93-anomalias-de-playback-e-buffering)
+10. **[Especificações Binárias (Apêndice para Desenvolvedores)](#10-especificações-binárias-apêndice-para-desenvolvedores)**
+    - [10.1. Central Directory File Header](#101-central-directory-file-header)
+    - [10.2. Regras de Checksum e Criptografia](#102-regras-de-checksum-e-criptografia)
+    - [10.3. Requisitos para Implementação de Leitores](#103-requisitos-para-implementação-de-leitores-de-terceiros)
+11. **[Roteiro de Futuro (Roadmap)](#11-roteiro-de-futuro-roadmap)**
+12. **[Perguntas Frequentes Exaustivas (Mega-FAQ)](#12-perguntas-frequentes-exaustivas-mega-faq)**
 
 ---
 
@@ -63,6 +63,10 @@
 ### 1.1. O Desafio Histórico do Arquivamento Web
 Desde o final dos anos 90, o mundo da computação tenta, sem grande sucesso, encontrar uma forma elegante de guardar uma página de internet. O formato nativo `.html` que os browsers oferecem quando fazemos "Guardar Como" é catastrófico: cria um ficheiro HTML e, ao lado, uma pasta embaraçosa cheia de imagens estilhaçadas. 
 A Microsoft tentou resolver isto com o `.mhtml`, condensando tudo, mas os ficheiros eram pesados e o suporte da indústria quase nulo. Anos depois, aplicações massivas como o Electron começaram a empacotar sites dentro de executáveis pesando, no mínimo, centenas de megabytes.
+
+O grande problema era: "Como arquivamos a Web rica de hoje?". Formatos clássicos como o PDF congelam documentos estáticos, destruindo completamente qualquer interatividade, vídeos ou navegação fluida de Single Page Applications (SPA). O EPUB é desenhado estritamente para texto e e-books estruturados, engasgando com JavaScript pesado. O WARC (Web ARChive) é o padrão de ouro para preservação institucional, mas é assustadoramente complexo para o utilizador comum e exige servidores de reprodução dedicados (Replay Servers).
+
+Faltava no mercado um contentor universal: um ficheiro capaz de armazenar toda a complexidade das frameworks modernas (React, Vue, WebGL) e entregar uma experiência interativa, rápida e encapsulada com um simples duplo-clique, suportado pelas tecnologias nativas dos sistemas operativos modernos. É aqui que nasce o formato PWAA.
 
 ### 1.2. O Paradigma do PWAA
 O **PWAA (Portable Web Application Archive)** surge como a derradeira solução. Ele não é um executável inchado, nem é um formato morto. Ele é um padrão de ficheiro vivo, desenhado com a exata filosofia da Web Moderna, mas perfeitamente operável sem um byte de tráfego de Internet. 

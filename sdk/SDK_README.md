@@ -67,7 +67,8 @@ O `pwaareader` é um executável autónomo (Standalone). Não necessita de insta
 
 ### 🪟 Windows
 
-No Windows, podes simplesmente arrastar o ficheiro `.pwaa` para cima do executável, ou usar a linha de comandos:
+No Windows, pode arrastar o ficheiro `.pwaa` para o executável, ou utilizar a linha de comandos:
+
 ```powershell
 # Reproduzir um ficheiro PWAA
 .\pwaareader-windows.exe o_meu_projeto.pwaa
@@ -76,41 +77,33 @@ No Windows, podes simplesmente arrastar o ficheiro `.pwaa` para cima do executá
 .\pwaareader-windows.exe o_meu_projeto.pwaa --headless
 ```
 
-O terminal do Windows (PowerShell) tem uma medida de segurança muito chata: ele recusa-se a correr executáveis apenas pelo nome se eles não estiverem instalados nas entranhas do sistema (ao contrário dos comandos normais como `cd` ou `git`).
-
-Para dizeres ao Windows *"Quero correr o programa que está exatamente aqui na minha frente"*, tens obrigatoriamente de colocar um ponto e uma barra (**`.\`**) antes do nome!
-
-Aqui tens a tua "Cábula" definitiva com os comandos exatos que deves usar na raiz do teu projeto. Copia e cola-os para ver a magia a acontecer (supondo que os executáveis todos estão na pasta sdk):
-
 #### A. Para abrir/ler um ficheiro PWAA
-Se tiveres um ficheiro chamado `projeto.pwaa` na tua pasta, abres o Leitor assim:
 ```powershell
 .\sdk\pwaareader.exe projeto.pwaa
 ```
 
 #### B. Converter uma pasta Web simples (Modo Pack)
-Pega numa pasta onde programaste HTML/CSS puro (por exemplo a pasta `sites/nanovisio`) e empacota-a de forma instantânea:
 ```powershell
 .\sdk\pwaa-builder.exe pack .\sites\nanovisio -o nanovisio.pwaa
 ```
 
-#### C. Converter um projeto complexo (Modo Build - React/Vue/Node)
-Se estiveres numa pasta com ficheiros cruéis cheios de dependências (`package.json`), o builder instala tudo, compila para código limpo de produção e arquiva:
+#### C. Converter um projeto complexo (Modo Build)
 ```powershell
-.\sdk\pwaa-builder.exe build .\A_TUA_PASTA_REACT -o app-moderna.pwaa
+.\sdk\pwaa-builder.exe build .\meu_projeto_react -o app-moderna.pwaa
 ```
 
 #### D. Clonar um Site da Internet (Modo Scrape)
-Para sacares todo um site que está na nuvem e imortalizá-lo offline num formato `.pwaa`:
 ```powershell
 .\sdk\pwaa-builder.exe scrape https://exemplo.com -o copia-online.pwaa
 ```
 
+---
 
 ### 🐧 Linux
 
-No Linux, tens de garantir que o ficheiro tem permissões de execução antes de o correres pela primeira vez.
+No Linux, atribua permissões de execução antes do primeiro uso:
 
+```bash
 # Dar permissão de execução
 chmod +x pwaareader-linux
 
@@ -119,20 +112,33 @@ chmod +x pwaareader-linux
 
 # Modo Silencioso (Headless)
 ./pwaareader-linux o_meu_projeto.pwaa --headless
+```
 
+---
 
 ### 🍏 MacOS
 
-Tal como no Linux, atribui permissão de execução e executa via terminal. O sistema Mac baseia-se no seu motor Cocoa de alta performance nativa.
+Tal como no Linux, atribua permissão de execução e execute via terminal. O sistema Mac baseia-se no seu motor Cocoa de alta performance nativa.
 
-3. Como Integrar (Mobile SDK - Android e iOS)
+```bash
+# Dar permissão de execução
+chmod +x pwaareader-mac
 
-Diferente da versão Desktop que é um programa executável, a versão Mobile é fornecida sob a forma de uma *Biblioteca Nativa (SDK)* para integrares nas tuas próprias aplicações móveis.
+# Reproduzir o ficheiro PWAA
+./pwaareader-mac o_meu_projeto.pwaa
+```
 
-🤖 Android (Java/Kotlin)
+---
 
-Dentro da Release, descarrega o ficheiro `pwaa-mobile-sdk.aar` e adiciona-o à pasta `app/libs` do teu projeto Android Studio.
+## 3. Como Integrar (Mobile SDK - Android e iOS)
 
+Diferente da versão Desktop que é um programa executável, a versão Mobile é fornecida sob a forma de uma **Biblioteca Nativa (SDK)** para integração direta nas suas próprias aplicações móveis.
+
+### 🤖 Android (Java/Kotlin)
+
+Dentro da Release, descarregue o ficheiro `pwaa-mobile-sdk.aar` e adicione-o à pasta `app/libs` do seu projeto Android Studio.
+
+```kotlin
 // Importar a classe gerada pelo SDK GoMobile
 import pwaa.mobile.sdk.Sdk
 
@@ -140,13 +146,14 @@ import pwaa.mobile.sdk.Sdk
 val engineStatus = Sdk.initSDK()
 val fileInfo = Sdk.readFile("/caminho/absoluto/no/telemovel/app.pwaa")
 
-// Posteriormente, podes carregar o localhost interno numa WebView Android
+// Posteriormente, carregue o localhost interno numa WebView Android
+```
 
+### 🍎 iOS (Swift/Objective-C)
 
-🍎 iOS (Swift/Objective-C)
+Descarregue a framework `pwaa-sdk.xcframework` da Release e arraste-a para o seu projeto no Xcode (garanta que está marcada como *Embed & Sign*).
 
-Descarrega a framework `pwaa-sdk.xcframework` da Release e arrasta-a para o teu projeto no Xcode (garante que está marcada como *Embed & Sign*).
-
+```swift
 // Importar o módulo
 import Pwaa_mobile_sdk
 
@@ -155,6 +162,7 @@ let status = Pwaa_mobile_sdkInitSDK()
 let readerData = Pwaa_mobile_sdkReadFile("/caminho/no/ios/app.pwaa")
 
 // Usar uma WKWebView para apresentar o conteúdo local servido pela framework
+```
 
-
+---
 *(PWAA Padrão Oficial - Construído para a era Offline)*
