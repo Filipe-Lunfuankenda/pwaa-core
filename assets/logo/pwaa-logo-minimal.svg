@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <!-- 3D Isometric Cube/Box (The Archive) - Minimalist Flat Version -->
+  <g transform="translate(250, 190)">
+    
+    <!-- Left face of the cube -->
+    <path d="M 0 0 L 0 130 L -112.5 65 L -112.5 -65 Z" fill="#00A8E8" />
+    
+    <!-- Right face of the cube -->
+    <path d="M 0 0 L 0 130 L 112.5 65 L 112.5 -65 Z" fill="#007EA7" />
+    
+    <!-- Inner box representation (simple shadow or dark area) -->
+    <polygon points="0,0 -112.5,-65 0,-130 112.5,-65" fill="#003459" />
+
+    <!-- Code Brackets '< / >' emerging from inside the box -->
+    <g stroke="#00F2FE" stroke-width="12" stroke-linecap="square" stroke-linejoin="miter" fill="none">
+      <path d="M -30 -20 L -60 -45 L -30 -70" />
+      <path d="M 30 -20 L 60 -45 L 30 -70" />
+      <path d="M -15 0 L 15 -90" />
+    </g>
+
+    <!-- Top face representing the Web Lid (Floating above) -->
+    <path d="M 0 -40 L -112.5 -105 L 0 -170 L 112.5 -105 Z" fill="none" stroke="#00F2FE" stroke-width="6" stroke-linejoin="miter"/>
+  </g>
+
+  <!-- PWAA Custom Typography (Solid, Flat) -->
+  <g transform="translate(250, 425) skewX(-12)">
+    <text x="0" y="0" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="900" font-size="110" fill="#00A8E8" text-anchor="middle" letter-spacing="-3">PWAA</text>
+  </g>
+
+  <!-- Subtitle -->
+  <text x="250" y="465" font-family="'Inter', system-ui, -apple-system, sans-serif" font-weight="700" font-size="16" fill="#007EA7" text-anchor="middle" letter-spacing="3">PORTABLE WEB APP ARCHIVE</text>
+</svg>
