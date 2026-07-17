@@ -1,3 +1,5 @@
+| ![Apresentação do Formato PWAA](assets/Apresentação-do-Formato-PWAA.gif) |
+| :---: |
 ### 🇵🇹 O que é o Formato PWAA? (Português)
 
 O **PWAA (Portable Web Application Archive)** é um padrão universal de arquivamento desenhado para encapsular e distribuir aplicações web completas, manuais e sites num único ficheiro que funciona 100% offline. Ele liberta aplicações complexas da dependência de servidores na nuvem, permitindo que corram nativamente em qualquer máquina com total interatividade.
