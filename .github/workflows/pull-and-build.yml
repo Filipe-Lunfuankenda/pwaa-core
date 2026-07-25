@@ -60,6 +60,7 @@ jobs:
         run: |
           find public-repo -mindepth 1 -maxdepth 1 ! -name '.git' ! -name 'README.md' ! -name '.github' -exec rm -rf {} +
           mkdir -p public-repo/sdk
+          rsync -av --exclude='*.exe' --exclude='*-linux*' --exclude='*-mac*' --exclude='*.aar' --exclude='*.xcframework' private-repo/sdk/ public-repo/sdk/ 2>/dev/null || true
           rsync -av --exclude='*.exe' --exclude='*-linux*' --exclude='*-mac*' --exclude='*.aar' --exclude='*.xcframework' private-repo/reader/ public-repo/sdk/reader/
           cp -r private-repo/examples public-repo/ 2>/dev/null || true
           cp -r private-repo/assets public-repo/ 2>/dev/null || true
@@ -115,6 +116,12 @@ jobs:
         with:
           go-version: 'stable'
           cache: true
+
+      - name: Install Linux Dependencies
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev
 
       - name: Build PWAA Reader Core
         env:
