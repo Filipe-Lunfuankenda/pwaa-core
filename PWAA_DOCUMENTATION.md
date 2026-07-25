@@ -103,7 +103,7 @@ O interior de um arquivo `.pwaa` validado deve refletir uma topologia "pronta-pa
 ```text
 <Raiz PWAA>
 │
-├── index.html            <- OBRIGATÓRIO (O Coração)
+├── index.html            <- PRINCIPAL (Mas não estritamente obrigatório)
 ├── favicon.ico           <- OPCIONAL mas Recomendado
 ├── styles/               <- OPCIONAL (Pode ter qualquer nome)
 │   └── main.css
@@ -117,7 +117,12 @@ O interior de um arquivo `.pwaa` validado deve refletir uma topologia "pronta-pa
 ```
 
 ### 2.4. Pontos de Montagem (Entrypoints)
-O Leitor PWAA obriga à existência de um `index.html` no nível zero da árvore. Se um arquivo for empacotado tendo a pasta base dentro dele (ex: `dist/index.html` no nível 1), o Leitor rejeitará o `.pwaa`. O conteúdo deve fluir livremente na raiz.
+Historicamente, o Leitor PWAA obrigava à existência de um `index.html` no nível zero. No entanto, o algoritmo de roteamento foi redesenhado para ser **100% à prova de balas** (inteligente e indestrutível), implementando um mecanismo de *Fallback de 3 Níveis* para pedidos HTML:
+1. **SPA Fallback:** Procura um `index.html` na raiz absoluta do arquivo (útil para Single Page Applications como React e Vue).
+2. **Deep Index Fallback:** Se falhar, procura autonomamente por qualquer `index.html` dentro de qualquer subpasta aninhada.
+3. **Generic HTML Fallback:** Se não houver nenhum "index", assume e renderiza o primeiro ficheiro `.html` ou `.htm` encontrado no ZIP, independentemente da sua profundidade.
+
+Isto significa que arquivos singulares (ex: `artigo_isolado.html`) ou projetos mal estruturados (ex: empacotados acidentalmente dentro de uma subpasta `dist/index.html`) **funcionarão sempre na perfeição**, sem nunca resultar num ecrã em branco ou erro 404. O Leitor descobre a raiz por si mesmo de forma invisível.
 
 ### 2.5. Assinaturas MIME e Magic Bytes
 Historicamente, leitores locais sofrem quando o sistema operativo não reconhece ficheiros (ex: o registo do Windows do utilizador não sabe o que é um `.css`).
@@ -295,7 +300,7 @@ Mesmo num ecossistema hiper-controlado, as anomalias originárias das origens oc
 
 ### 9.1. Erros Críticos de Parsing
 - **"O ecrã fica em branco e não acontece nada quando clico duas vezes no ficheiro .pwaa"**
-  Isto nunca é falha do WebView, mas sim falta de conformidade da estrutura interior com a Norma Oficial (ver Secção 2.3). Se descompactaste o pacote numa hierarquia onde o ficheiro `index.html` está encerrado dentro de outra pasta (ex: `minha_obra/index.html` no nível 1 e não 0), o Leitor reverte-se ao protocolo `NotFound`. É impossível ao Leitor tentar adivinhar em que sub-nível escondeste o ponto principal de ancoragem. Solução: Embala apenas o interior absoluto da pasta-fonte.
+  Historicamente, isto ocorria devido a uma falha estrutural (ex: o `index.html` ter sido empacotado numa subpasta). Nas versões modernas do Leitor PWAA (com o *Fallback Inteligente de 3 Níveis*), este erro foi tecnicamente **erradicado**. O Leitor vasculhará autonomamente toda a árvore do ZIP à procura de qualquer ficheiro HTML para garantir a renderização. Se mesmo assim vires um ecrã em branco ou erro 404, significa que o pacote `.pwaa` está **totalmente vazio** ou é um arquivo sem qualquer ficheiro HTML no seu interior.
 
 ### 9.2. Problemas de Assinatura Mime-Type
 - **"Cores desvanecidas, ficheiros ES6 não carregam"**
