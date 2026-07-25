@@ -1,0 +1,250 @@
+name: Build Universal SDK
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_all:
+        description: 'Compilar tudo (incluindo Mobile/PAL Studio)?'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  build-desktop:
+    name: Build PWAA SDK
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # Apenas Linux nos commits normais. Para Windows/Mac é preciso uma Tag (v*).
+        os: ${{ startsWith(github.ref, 'refs/tags/v') && fromJSON('["ubuntu-22.04", "macos-latest", "windows-latest"]') || fromJSON('["ubuntu-22.04"]') }}
+        include:
+          - os: ubuntu-22.04
+            goos: linux
+            goarch: amd64
+            suffix: -linux
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+            suffix: -mac
+          - os: macos-latest
+            goos: darwin
+            goarch: arm64
+            suffix: -mac-arm64
+          - os: windows-latest
+            goos: windows
+            goarch: amd64
+            suffix: .exe
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: 'stable'
+        cache: true
+
+    - name: Install Dependencies (Linux)
+      if: matrix.os == 'ubuntu-22.04'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential
+
+    - name: Build PWAA Builder
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+        CGO_ENABLED: 1
+      run: |
+        cd builder
+        go build -v -trimpath -ldflags="-s -w" -o ../sdk/pwaa-builder${{ matrix.suffix }} main.go pack.go scrape.go build.go
+
+    - name: Build PWAA Reader
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+        CGO_ENABLED: 1
+      run: |
+        cd reader
+        go build -v -trimpath -ldflags="-s -w" -o ../sdk/pwaareader${{ matrix.suffix }}
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: pwaa-sdk${{ matrix.suffix }}
+        path: sdk/*
+        retention-days: 7
+
+  build-mobile:
+    name: Build PWAA Mobile SDK
+    runs-on: macos-latest
+    if: startsWith(github.ref, 'refs/tags/v') # Apenas em releases para poupar os caríssimos runners macOS!
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: 'stable'
+        cache: true
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    - name: Install Gomobile
+      run: |
+        go install golang.org/x/mobile/cmd/gomobile@latest
+        gomobile init
+
+    - name: Build Android Library (AAR)
+      run: |
+        cd mobile
+        gomobile bind -v -target=android -androidapi 21 -o ../sdk/pwaa-sdk.aar .
+
+    - name: Build iOS Library (XCFramework)
+      run: |
+        cd mobile
+        gomobile bind -v -target=ios -o ../sdk/pwaa-sdk.xcframework .
+
+    - name: Upload Mobile Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: pwaa-mobile-sdk
+        path: |
+          sdk/*.aar
+          sdk/*.xcframework
+        retention-days: 7
+
+  build-studio:
+    name: Build PAL Studio
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # Apenas Linux nos commits normais. Para Windows/Mac é preciso Tag.
+        os: ${{ startsWith(github.ref, 'refs/tags/v') && fromJSON('["ubuntu-22.04", "macos-latest", "windows-latest"]') || fromJSON('["ubuntu-22.04"]') }}
+        include:
+          - os: ubuntu-22.04
+            goos: linux
+            goarch: amd64
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+          - os: macos-latest
+            goos: darwin
+            goarch: arm64
+          - os: windows-latest
+            goos: windows
+            goarch: amd64
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: 'stable'
+        cache: true
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: pal-studio/frontend/package-lock.json
+
+    - name: Install Dependencies (Linux)
+      if: matrix.os == 'ubuntu-22.04'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential
+
+    - name: Install Wails
+      run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+    - name: Build PAL Studio
+      run: |
+        cd pal-studio
+        wails build -platform ${{ matrix.goos }}/${{ matrix.goarch }}
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pal-studio-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: pal-studio/build/bin/
+        retention-days: 7
+
+  sync-and-release:
+    name: Sync Source & Release Binaries
+    needs: [build-desktop, build-studio] # Depende apenas dos obrigatórios
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout Private Repository
+        uses: actions/checkout@v4
+        with:
+          path: private-repo
+
+      - name: Checkout Public Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Filipe-Lunfuankenda/pwaa-core
+          token: ${{ secrets.PUBLIC_REPO_PAT }}
+          path: public-repo
+
+      - name: Sync Source Files
+        run: |
+          find public-repo -mindepth 1 -maxdepth 1 ! -name '.git' ! -name 'README.md' -exec rm -rf {} +
+          
+          mkdir -p public-repo/sdk
+          mkdir -p public-repo/.github/workflows
+          
+          # Injetar workflow independente no repo público
+          cp private-repo/.github/public-workflow.yml public-repo/.github/workflows/core.yml
+          
+          # Manter apenas a sincronização existente original (apenas reader, omitindo builder/mobile)
+          rsync -av --exclude='*.exe' --exclude='*-linux*' --exclude='*-mac*' --exclude='*.aar' --exclude='*.xcframework' private-repo/sdk/ public-repo/sdk/
+          rsync -av --exclude='*.exe' --exclude='*-linux*' --exclude='*-mac*' --exclude='*.aar' --exclude='*.xcframework' private-repo/reader/ public-repo/sdk/reader/
+          
+          cp -r private-repo/examples public-repo/ 2>/dev/null || true
+          cp -r private-repo/assets public-repo/ 2>/dev/null || true
+          cp private-repo/PWAA_DOCUMENTATION.md public-repo/ 2>/dev/null || true
+
+      - name: Commit and Push Source
+        run: |
+          cd public-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          if git diff --staged --quiet; then
+            echo "Nenhuma alteração no código para sincronizar."
+          else
+            git commit -m "Automated Open Core Sync"
+            git push
+            echo "Sincronização de código concluída com sucesso!"
+          fi
+
+      - name: Download all workflow artifacts
+        if: startsWith(github.ref, 'refs/tags/v') # Só criamos Release no repositório privado se for uma Tag!
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release ZIPs (Private)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          mkdir release_assets
+          for dir in artifacts/*/; do
+            if [ -d "$dir" ]; then
+              base=$(basename "$dir")
+              zip -r "release_assets/${base}.zip" "$dir"
+            fi
+          done
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release_assets/*.zip
