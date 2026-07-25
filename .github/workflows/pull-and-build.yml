@@ -1,0 +1,216 @@
+name: Pull from Private & Release Open Core
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Tipo de incremento de versão (patch, minor, major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+jobs:
+  sync-build-release:
+    name: Sync, Build & Release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            goos: linux
+            goarch: amd64
+            suffix: -linux
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+            suffix: -mac
+          - os: macos-latest
+            goos: darwin
+            goarch: arm64
+            suffix: -mac-arm64
+          - os: windows-latest
+            goos: windows
+            goarch: amd64
+            suffix: .exe
+
+    steps:
+      - name: Checkout Public Repository
+        uses: actions/checkout@v4
+        with:
+          path: public-repo
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout Private Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Filipe-Lunfuankenda/pwaa
+          token: ${{ secrets.PRIVATE_REPO_PAT }}
+          path: private-repo
+          fetch-depth: 0 # Necessário para ler todo o histórico de tags
+          
+      - name: Sincronizar Ficheiros Core (Só no Ubuntu)
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          find public-repo -mindepth 1 -maxdepth 1 ! -name '.git' ! -name 'README.md' ! -name '.github' -exec rm -rf {} +
+          mkdir -p public-repo/sdk
+          rsync -av --exclude='*.exe' --exclude='*-linux*' --exclude='*-mac*' --exclude='*.aar' --exclude='*.xcframework' private-repo/reader/ public-repo/sdk/reader/
+          cp -r private-repo/examples public-repo/ 2>/dev/null || true
+          cp -r private-repo/assets public-repo/ 2>/dev/null || true
+          cp private-repo/PWAA_DOCUMENTATION.md public-repo/ 2>/dev/null || true
+
+          cd public-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          if ! git diff --staged --quiet; then
+            git commit -m "Automated Open Core Sync from Private Repo"
+            git push
+          fi
+
+      - name: Determinar Nova Versão (Só no Ubuntu)
+        if: matrix.os == 'ubuntu-22.04'
+        id: versioning
+        run: |
+          cd private-repo
+          # Obter a tag mais recente (ex: v1.0.3) ou assumir v0.0.0
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "Versão anterior no Privado: $LATEST_TAG"
+          
+          # Separar v, major, minor, patch
+          PREFIX=${LATEST_TAG:0:1}
+          VERSION=${LATEST_TAG:1}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          
+          BUMP="${{ github.event.inputs.version_bump }}"
+          if [ "$BUMP" = "major" ]; then
+            MAJOR=$((MAJOR+1))
+            MINOR=0
+            PATCH=0
+          elif [ "$BUMP" = "minor" ]; then
+            MINOR=$((MINOR+1))
+            PATCH=0
+          else
+            PATCH=$((PATCH+1))
+          fi
+          
+          NEW_TAG="${PREFIX}${MAJOR}.${MINOR}.${PATCH}"
+          echo "Nova versão calculada: $NEW_TAG"
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          
+          # Criar tag no repositório privado para garantir que a enumeração é imutável
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+          cache: true
+
+      - name: Build PWAA Reader Core
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 1
+        run: |
+          cd private-repo/reader
+          go build -v -trimpath -ldflags="-s -w" -o ../../pwaareader${{ matrix.suffix }} 
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pwaa-reader${{ matrix.suffix }}
+          path: pwaareader${{ matrix.suffix }}
+          retention-days: 1
+
+  build-mobile:
+    name: Build PWAA Mobile SDK
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Private Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Filipe-Lunfuankenda/pwaa
+          token: ${{ secrets.PRIVATE_REPO_PAT }}
+          path: private-repo
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+          cache: true
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install Gomobile
+        run: |
+          go install golang.org/x/mobile/cmd/gomobile@latest
+          gomobile init
+
+      - name: Build Android Library (AAR)
+        run: |
+          cd private-repo/mobile
+          gomobile bind -v -target=android -androidapi 21 -o ../../pwaa-sdk.aar .
+
+      - name: Build iOS Library (XCFramework)
+        run: |
+          cd private-repo/mobile
+          gomobile bind -v -target=ios -o ../../pwaa-sdk.xcframework .
+
+      - name: Upload Mobile Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pwaa-mobile-sdk
+          path: |
+            *.aar
+            *.xcframework
+          retention-days: 1
+
+  release:
+    name: Criar Release Pública
+    needs: [sync-build-release, build-mobile]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all workflow artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release ZIPs
+        run: |
+          mkdir release_assets
+          for dir in artifacts/*/; do
+            if [ -d "$dir" ]; then
+              base=$(basename "$dir")
+              zip -r "release_assets/${base}.zip" "$dir"
+            fi
+          done
+
+      - name: Gerar Tag de Release
+        id: get_tag
+        run: |
+          # Extrai a mesma tag que o job anterior gravou no repositório privado
+          git clone https://${{ secrets.PRIVATE_REPO_PAT }}@github.com/Filipe-Lunfuankenda/pwaa.git private-repo
+          cd private-repo
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          echo "TAG=$LATEST_TAG" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.TAG }}
+          files: release_assets/*.zip
+          token: ${{ secrets.GITHUB_TOKEN }}
