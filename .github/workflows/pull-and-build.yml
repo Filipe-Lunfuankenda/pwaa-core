@@ -46,6 +46,7 @@ jobs:
         with:
           path: public-repo
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Checkout Private Repository
         uses: actions/checkout@v4
@@ -72,7 +73,17 @@ jobs:
           git add .
           if ! git diff --staged --quiet; then
             git commit -m "Automated Open Core Sync from Private Repo"
-            git push
+            for attempt in 1 2 3; do
+              git pull --rebase origin "${GITHUB_REF_NAME}"
+              if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+                break
+              fi
+              if [ "$attempt" -eq 3 ]; then
+                echo "Failed to push synchronized files after 3 attempts."
+                exit 1
+              fi
+              sleep 2
+            done
           fi
 
       - name: Determinar Nova Versão (Só no Ubuntu)
