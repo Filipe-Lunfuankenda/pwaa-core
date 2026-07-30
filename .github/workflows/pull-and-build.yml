@@ -197,12 +197,12 @@ jobs:
       - name: Build Android Library (AAR)
         run: |
           cd private-repo/mobile
-          gomobile bind -v -target=android -androidapi 21 -o ../../pwaa-sdk.aar .
+          gomobile bind -v -target=android -androidapi 21 -trimpath -ldflags="-s -w" -o ../../pwaa-sdk.aar .
 
       - name: Build iOS Library (XCFramework)
         run: |
           cd private-repo/mobile
-          gomobile bind -v -target=ios -o ../../pwaa-sdk.xcframework .
+          gomobile bind -v -target=ios -trimpath -ldflags="-s -w" -o ../../pwaa-sdk.xcframework .
 
       - name: Upload Mobile Artifacts
         uses: actions/upload-artifact@v4
