@@ -21,6 +21,7 @@ import (
 	"syscall"
 	"time"
 	"unsafe"
+	_ "embed"
 
 	"github.com/jchv/go-webview2"
 )
@@ -54,6 +55,24 @@ func main() {
 	}
 
 	pwaaPath := os.Args[1]
+
+	var injectScriptPath string
+	for i := 2; i < len(os.Args)-1; i++ {
+		if os.Args[i] == "--inject" {
+			injectScriptPath = os.Args[i+1]
+			break
+		}
+	}
+	
+	var customInjectBytes []byte
+	if injectScriptPath != "" {
+		b, err := os.ReadFile(injectScriptPath)
+		if err == nil {
+			customInjectBytes = b
+		} else {
+			debugLog("Aviso: Falha ao carregar script de injecao: " + err.Error())
+		}
+	}
 
 	// 1. Ler o ficheiro ZIP
 	r, err := zip.OpenReader(pwaaPath)
@@ -201,7 +220,7 @@ func main() {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		
+
 		if reqPath == "" {
 			reqPath = "/"
 		}
@@ -364,74 +383,29 @@ func main() {
 		debugLog(fmt.Sprintf("FOUND: %s -> %s (Mime: %s)", reqPath, file.Name, ctype))
 		
 		var rs io.ReadSeeker
+		var serveData []byte
+		var err error
 
-		if file.Method == zip.Store {
-			// Acesso direto ao disco rígido (Zero RAM)
-			pwaaFd, err := os.Open(pwaaPath)
+		isHTML := strings.Contains(ctype, "text/html") || ext == ".html" || ext == ".htm"
+
+		if isHTML {
+			var rc io.ReadCloser
+			rc, err = file.Open()
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			defer pwaaFd.Close()
-			
-			offset, err := file.DataOffset()
+			serveData, err = io.ReadAll(rc)
+			rc.Close()
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			rs = io.NewSectionReader(pwaaFd, offset, int64(file.UncompressedSize64))
-			
-			if ctype == "" {
-				ctype = "application/octet-stream"
-			}
-		} else if file.UncompressedSize64 > 50*1024*1024 {
-			// Ficheiro comprimido gigante (> 50 MB)
-			// Extrair para disco temporário para não explodir a RAM
-			rc, err := file.Open()
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			defer rc.Close()
-			
-			tmp, err := os.CreateTemp("", "pwaa_stream_*")
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			defer tmp.Close()
-			tempFiles = append(tempFiles, tmp.Name())
-			
-			io.Copy(tmp, rc)
-			tmp.Seek(0, 0)
-			rs = tmp
-			if ctype == "" {
-				ctype = "application/octet-stream"
-			}
-		} else {
-			// Ficheiro pequeno (< 50 MB), ler para a RAM (Máxima Velocidade)
-			rc, err := file.Open()
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			defer rc.Close()
-			
-			data, err := io.ReadAll(rc)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			
-			if ctype == "" {
-				ctype = http.DetectContentType(data)
-			}
-			
-			// Injeção universal de interceção de links
-			if strings.Contains(ctype, "text/html") {
-				script := []byte(`
+
+			script := []byte(`
 <script>
 (function() {
+	// 1. Intercetar Links Externos e _blank
 	var proxyOpen = window.open;
 	window.open = function(url, target, features) {
 		if (!url) return null;
@@ -442,7 +416,7 @@ func main() {
 			else fetch('/api/open-external?url=' + encodeURIComponent(url));
 			return null;
 		}
-		window.location.href = url; // Forçar interno na mesma janela
+		window.location.href = url;
 		return null;
 	};
 
@@ -483,27 +457,93 @@ func main() {
 		observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['target'] });
 		document.querySelectorAll('a[target="_blank"], form[target="_blank"]').forEach(function(el) { el.removeAttribute('target'); });
 	});
-
-	window.addEventListener('message', function(e) {
-		if (e.data && e.data.action === 'find' && e.data.term) {
-			if (!window.find(e.data.term, false, false, true, false, false, false)) {
-				window.find(e.data.term, false, false, true, false, true, false);
-			}
-		}
-	});
 })();
 </script>`)
-				if idx := bytes.LastIndex(data, []byte("</body>")); idx != -1 {
-					newData := make([]byte, 0, len(data)+len(script))
-					newData = append(newData, data[:idx]...)
+
+			if len(customInjectBytes) > 0 {
+				customTag := append([]byte("<script>\n"), customInjectBytes...)
+				customTag = append(customTag, []byte("\n</script>\n")...)
+				
+				idx := bytes.LastIndex(bytes.ToLower(serveData), []byte("</body>"))
+				if idx == -1 {
+					idx = bytes.LastIndex(bytes.ToLower(serveData), []byte("</html>"))
+				}
+				if idx != -1 {
+					newData := make([]byte, 0, len(serveData)+len(customTag)+len(script))
+					newData = append(newData, serveData[:idx]...)
 					newData = append(newData, script...)
-					newData = append(newData, data[idx:]...)
-					data = newData
+					newData = append(newData, customTag...)
+					newData = append(newData, serveData[idx:]...)
+					serveData = newData
 				} else {
-					data = append(data, script...)
+					serveData = append(serveData, script...)
+					serveData = append(serveData, customTag...)
+				}
+			} else {
+				idx := bytes.LastIndex(bytes.ToLower(serveData), []byte("</body>"))
+				if idx == -1 {
+					idx = bytes.LastIndex(bytes.ToLower(serveData), []byte("</html>"))
+				}
+				if idx != -1 {
+					newData := make([]byte, 0, len(serveData)+len(script))
+					newData = append(newData, serveData[:idx]...)
+					newData = append(newData, script...)
+					newData = append(newData, serveData[idx:]...)
+					serveData = newData
+				} else {
+					serveData = append(serveData, script...)
 				}
 			}
-			rs = bytes.NewReader(data)
+			rs = bytes.NewReader(serveData)
+			ctype = "text/html; charset=utf-8"
+		} else {
+			if file.Method == zip.Store {
+				pwaaFd, err := os.Open(pwaaPath)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				defer pwaaFd.Close()
+				offset, err := file.DataOffset()
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				rs = io.NewSectionReader(pwaaFd, offset, int64(file.UncompressedSize64))
+			} else if file.UncompressedSize64 > 50*1024*1024 {
+				var rc io.ReadCloser
+				rc, err = file.Open()
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				defer rc.Close()
+				tmp, err := os.CreateTemp("", "pwaa_stream_*")
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				defer tmp.Close()
+				tempFiles = append(tempFiles, tmp.Name())
+				io.Copy(tmp, rc)
+				tmp.Seek(0, 0)
+				rs = tmp
+			} else {
+				var rc io.ReadCloser
+				rc, err = file.Open()
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				defer rc.Close()
+				var data []byte
+				data, err = io.ReadAll(rc)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				rs = bytes.NewReader(data)
+			}
 		}
 
 		w.Header().Set("Content-Type", ctype)

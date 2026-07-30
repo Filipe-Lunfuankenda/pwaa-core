@@ -39,6 +39,24 @@ func main() {
 
 	pwaaPath := os.Args[1]
 
+	var injectScriptPath string
+	for i := 2; i < len(os.Args)-1; i++ {
+		if os.Args[i] == "--inject" {
+			injectScriptPath = os.Args[i+1]
+			break
+		}
+	}
+	
+	var customInjectBytes []byte
+	if injectScriptPath != "" {
+		b, err := os.ReadFile(injectScriptPath)
+		if err == nil {
+			customInjectBytes = b
+		} else {
+			log.Println("Aviso: Falha ao carregar script de injecao: " + err.Error())
+		}
+	}
+
 	// 1. Ler o ficheiro ZIP
 	r, err := zip.OpenReader(pwaaPath)
 	if err != nil {
@@ -439,24 +457,42 @@ func main() {
 			}
 		}
 	}, true);
-
-	window.addEventListener('message', function(e) {
-		if (e.data && e.data.action === 'find' && e.data.term) {
-			if (!window.find(e.data.term, false, false, true, false, false, false)) {
-				window.find(e.data.term, false, false, true, false, true, false);
-			}
-		}
-	});
 })();
 </script>`)
-				if idx := bytes.LastIndex(data, []byte("</body>")); idx != -1 {
-					newData := make([]byte, 0, len(data)+len(script))
-					newData = append(newData, data[:idx]...)
-					newData = append(newData, script...)
-					newData = append(newData, data[idx:]...)
-					data = newData
+
+				if len(customInjectBytes) > 0 {
+					customTag := append([]byte("<script>\n"), customInjectBytes...)
+					customTag = append(customTag, []byte("\n</script>\n")...)
+					
+					idx := bytes.LastIndex(bytes.ToLower(data), []byte("</body>"))
+					if idx == -1 {
+						idx = bytes.LastIndex(bytes.ToLower(data), []byte("</html>"))
+					}
+					if idx != -1 {
+						newData := make([]byte, 0, len(data)+len(customTag)+len(script))
+						newData = append(newData, data[:idx]...)
+						newData = append(newData, script...)
+						newData = append(newData, customTag...)
+						newData = append(newData, data[idx:]...)
+						data = newData
+					} else {
+						data = append(data, script...)
+						data = append(data, customTag...)
+					}
 				} else {
-					data = append(data, script...)
+					idx := bytes.LastIndex(bytes.ToLower(data), []byte("</body>"))
+					if idx == -1 {
+						idx = bytes.LastIndex(bytes.ToLower(data), []byte("</html>"))
+					}
+					if idx != -1 {
+						newData := make([]byte, 0, len(data)+len(script))
+						newData = append(newData, data[:idx]...)
+						newData = append(newData, script...)
+						newData = append(newData, data[idx:]...)
+						data = newData
+					} else {
+						data = append(data, script...)
+					}
 				}
 			}
 			rs = bytes.NewReader(data)
