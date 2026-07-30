@@ -54,7 +54,7 @@ jobs:
           repository: Filipe-Lunfuankenda/pwaa
           token: ${{ secrets.PRIVATE_REPO_PAT }}
           path: private-repo
-          fetch-depth: 0 # Necessário para ler todo o histórico de tags
+          fetch-depth: 0
           
       - name: Sincronizar Ficheiros Core (Só no Ubuntu)
         if: matrix.os == 'ubuntu-22.04'
@@ -91,14 +91,20 @@ jobs:
         id: versioning
         run: |
           cd private-repo
-          # Obter a tag mais recente (ex: v1.0.3) ou assumir v0.0.0
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-          echo "Versão anterior no Privado: $LATEST_TAG"
           
-          # Separar v, major, minor, patch
-          PREFIX=${LATEST_TAG:0:1}
-          VERSION=${LATEST_TAG:1}
+          # 1. Limpar espaços, quebras de linha e o prefixo 'v'
+          LATEST_TAG=$(echo "$LATEST_TAG" | tr -d '[:space:]')
+          VERSION=${LATEST_TAG#v}
+          echo "Versão anterior no Privado limpa: $VERSION"
+          
+          # 2. Separar em Major, Minor e Patch
           IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          
+          # 3. Forçar a ser numérico (caso venha vazio, assume 0)
+          MAJOR=${MAJOR:-0}
+          MINOR=${MINOR:-0}
+          PATCH=${PATCH:-0}
           
           BUMP="${{ github.event.inputs.version_bump }}"
           if [ "$BUMP" = "major" ]; then
@@ -112,11 +118,10 @@ jobs:
             PATCH=$((PATCH+1))
           fi
           
-          NEW_TAG="${PREFIX}${MAJOR}.${MINOR}.${PATCH}"
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
           echo "Nova versão calculada: $NEW_TAG"
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
           
-          # Criar tag no repositório privado para garantir que a enumeração é imutável
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag $NEW_TAG
@@ -141,13 +146,24 @@ jobs:
           CGO_ENABLED: 1
         run: |
           cd private-repo/reader
-          go build -v -trimpath -ldflags="-s -w" -o ../../pwaareader${{ matrix.suffix }} 
+          go build -v -trimpath -ldflags="-s -w" -o ../../pwaareader${{ matrix.suffix }} .
 
-      - name: Upload Artifact
+      - name: Build PWAA Builder
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 1
+        run: |
+          cd private-repo/builder
+          go build -v -trimpath -ldflags="-s -w" -o ../../pwaa-builder${{ matrix.suffix }} .
+
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: pwaa-reader${{ matrix.suffix }}
-          path: pwaareader${{ matrix.suffix }}
+          name: pwaa-tools${{ matrix.suffix }}
+          path: |
+            pwaareader${{ matrix.suffix }}
+            pwaa-builder${{ matrix.suffix }}
           retention-days: 1
 
   build-mobile:
@@ -220,7 +236,6 @@ jobs:
       - name: Gerar Tag de Release
         id: get_tag
         run: |
-          # Extrai a mesma tag que o job anterior gravou no repositório privado
           git clone https://${{ secrets.PRIVATE_REPO_PAT }}@github.com/Filipe-Lunfuankenda/pwaa.git private-repo
           cd private-repo
           LATEST_TAG=$(git describe --tags --abbrev=0)
